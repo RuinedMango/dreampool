@@ -1,0 +1,50 @@
+package dreampool.core;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import dreampool.core.transform.Transform;
+
+public class Thing {
+	public boolean startedOnce = false;
+	public Transform transform = new Transform();
+	public String name = "nilli";
+	public UUID uid = UUID.randomUUID();
+	public List<Part> parts = new ArrayList<Part>();
+	
+	public Thing (String name) {
+		this.name = name;
+	}
+	
+	public void Update() {
+		for(Part part : parts) {
+			part.Update();
+		}
+	}
+	
+	public void Start() {
+		for(Part part : parts) {
+			if(!part.startedOnce) {
+				part.startedOnce = true;
+				part.Start();;
+			}
+		}
+	}
+	
+	public void addPart(Part part) {
+		parts.add(0, part);
+		part.thing = this;
+		part.transform = this.transform;
+	}
+	
+	public Part getPart(String type) {
+		for(Part part : parts) {
+			System.out.println(part.getClass().getName());
+			if(part.getClass().getName() == type) {
+				return part;
+			}
+		}
+		return null;
+	}
+}
