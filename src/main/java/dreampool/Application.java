@@ -3,7 +3,6 @@ package dreampool;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
@@ -53,6 +52,8 @@ public class Application {
 		GL.createCapabilities();
 		
 		GL46.glViewport(0, 0, 800, 600);
+		GL46.glEnable(GL46.GL_CULL_FACE);
+		GL46.glCullFace(GL46.GL_BACK);
 		GLFW.glfwSetFramebufferSizeCallback(window, myBufferCallback());
 		
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
@@ -77,7 +78,6 @@ public class Application {
 		
 		SceneManager manager = new SceneManager(new WienerScene().scene);
 
-		manager.currentScene.Start();
 		ourShader.use();
 		
 		ourShader.setInt("texture1", 0);
@@ -87,6 +87,8 @@ public class Application {
 		DeviceManager device = new DeviceManager(window);
 		
 		Time time = new Time();
+		
+		manager.currentScene.Start();
 		
 		GL46.glEnable(GL46.GL_DEPTH_TEST);
 		

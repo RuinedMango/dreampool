@@ -3,7 +3,7 @@ package dreampool.core;
 import org.lwjgl.glfw.GLFW;
 
 public class Time {
-	public Time Singleton;
+	public static Time Singleton = null;
 	public static float deltaTime;
 	private float lastFrame;
 	

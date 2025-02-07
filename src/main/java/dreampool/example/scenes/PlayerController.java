@@ -24,7 +24,10 @@ public class PlayerController extends Part{
 	@Override
 	public void Start() {
 		DeviceManager.Singleton.setCursorPosCallback(myMouseCallback());
-		cam = (Camera)thing.getPart("Camera");
+		cam = (Camera) thing.getPart("Camera");
+		if(cam == null) {
+			System.out.println("Dick n balls");
+		}
 	}
 	
 	@Override
@@ -60,7 +63,7 @@ public class PlayerController extends Part{
 		}
 	}
 	
-	GLFWCursorPosCallback myMouseCallback() {
+	public GLFWCursorPosCallback myMouseCallback() {
 		return new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {

@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 
 public class DeviceManager {
-	public static DeviceManager Singleton;
+	public static DeviceManager Singleton = null;
 	public long window;
 	
 	public DeviceManager(long window) {

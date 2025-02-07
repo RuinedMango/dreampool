@@ -16,8 +16,8 @@ public class NoiseListener extends Part{
 	@Override
 	public void Update() {
 		setPosition(transform.position);
-		
-		Matrix4f cam = ((Camera)thing.getPart("Camera")).matrix;
+
+		Matrix4f cam = ((Camera) thing.getPart("Camera")).matrix;
 		Vector3f at = new Vector3f();
 		cam.positiveZ(at).negate();
 		Vector3f up = new Vector3f();
@@ -26,7 +26,7 @@ public class NoiseListener extends Part{
 	}
 	
     public void setPosition(Vector3f position) {
-        AL11.alListener3f(AL11.AL_POSITION, position.x, position.y, position.z);
+       AL11.alListener3f(AL11.AL_POSITION, position.x, position.y, position.z);
     }
 	
 	public void setOrientation(Vector3f at, Vector3f up) {

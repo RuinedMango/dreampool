@@ -20,6 +20,7 @@ public class WienerScene {
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());
 		player.addPart(new PlayerController());
+		player.transform.position = new Vector3f(0, 0, 0);
 		Thing ball1 = new Thing("ball1");
 		ball1.addPart(new Mesh("/models/sphere.obj"));
 		ball1.addPart(new Texture("/images/container.jpg"));
@@ -36,17 +37,17 @@ public class WienerScene {
 		shaft.transform.position = new Vector3f(0, 20, 1);
 		shaft.transform.size = new Vector3f(0.5f, 20f, 0.5f);
 		Thing sound = new Thing("testicle");
-		NoiseSource soundsource = new NoiseSource("/audio/yell.ogg", AL11.AL_TRUE, AL11.AL_TRUE);
+		NoiseSource soundsource = new NoiseSource("/audio/yell.ogg", false, true);
 		sound.addPart(soundsource);
 		sound.addPart(new Mesh("/models/FaceCube.obj"));
 		sound.addPart(new Texture("/images/face.png"));
 		sound.addPart(new Texture("/images/doge.png", 1));
-		sound.transform.position = new Vector3f(2f, 2f, 2f);
-		scene.addThing(player);
+		sound.transform.position = new Vector3f(-2f, 2f, 2f);
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(shaft);
 		scene.addThing(sound);
+		scene.addThing(player);
 		soundsource.play();
 	}
 }

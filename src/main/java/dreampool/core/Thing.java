@@ -38,11 +38,11 @@ public class Thing {
 		part.transform = this.transform;
 	}
 	
-	public Part getPart(String type) {
+	@SuppressWarnings("unchecked")
+	public <T extends Part> T getPart(String type) {
 		for(Part part : parts) {
-			System.out.println(part.getClass().getName());
-			if(part.getClass().getName() == type) {
-				return part;
+			if(part.getClass().getSimpleName().equals(type)) {
+				return (T) part;
 			}
 		}
 		return null;
