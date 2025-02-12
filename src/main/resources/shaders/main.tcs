@@ -1,0 +1,22 @@
+#version 460 core
+layout(vertices = 3) out; // Triangles (3 control points)
+
+in vec3 vsPos[];
+in vec2 vsTexCoord[];
+
+out vec3 tcsPos[];       // Output to TES
+out vec2 tcsTexCoord[];  // Output to TES
+
+void main() {
+    // Pass data to TES
+    tcsPos[gl_InvocationID] = vsPos[gl_InvocationID];
+    tcsTexCoord[gl_InvocationID] = vsTexCoord[gl_InvocationID];
+
+    // Set tessellation levels (adjust via uniforms if needed)
+    if (gl_InvocationID == 0) {
+        gl_TessLevelInner[0] = 4.0; // Inner subdivisions
+        gl_TessLevelOuter[0] = 4.0; // Edge subdivisions
+        gl_TessLevelOuter[1] = 4.0;
+        gl_TessLevelOuter[2] = 4.0;
+    }
+}

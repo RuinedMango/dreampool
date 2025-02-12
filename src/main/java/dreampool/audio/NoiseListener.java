@@ -8,20 +8,26 @@ import dreampool.core.Part;
 import dreampool.render.Camera;
 
 public class NoiseListener extends Part{
+	private Camera cam;
 	
 	public NoiseListener() {
 		
 	}
 	
 	@Override
+	public void Start(){
+		cam = (Camera) thing.getPart("Camera");
+	}
+	
+	@Override
 	public void Update() {
 		setPosition(transform.position);
 
-		Matrix4f cam = ((Camera) thing.getPart("Camera")).matrix;
+		Matrix4f camMatrix = cam.matrix;
 		Vector3f at = new Vector3f();
-		cam.positiveZ(at).negate();
+		camMatrix.positiveZ(at).negate();
 		Vector3f up = new Vector3f();
-		cam.positiveY(up);
+		camMatrix.positiveY(up);
 		setOrientation(at, up);
 	}
 	

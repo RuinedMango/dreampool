@@ -69,7 +69,7 @@ public class Application {
 		EBO = GL46.glGenBuffers();
 		GL46.glBindBuffer(GL46.GL_ELEMENT_ARRAY_BUFFER, EBO);
 		
-		ourShader = new Shader("/shaders/main.vert", "/shaders/main.frag");
+		ourShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
 		
 		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 5 * Float.BYTES, 0);
 		GL46.glEnableVertexAttribArray(0);
@@ -81,7 +81,7 @@ public class Application {
 		ourShader.use();
 		
 		ourShader.setInt("texture1", 0);
-		ourShader.setInt("texture2", 1);	
+		ourShader.setInt("texture2", 1);
 		
 		@SuppressWarnings("unused")
 		DeviceManager device = new DeviceManager(window);
@@ -90,7 +90,15 @@ public class Application {
 		
 		manager.currentScene.Start();
 		
+		GL46.glPatchParameteri(GL46.GL_PATCH_VERTICES, 3);	
 		GL46.glEnable(GL46.GL_DEPTH_TEST);
+		GL46.glDisable(GL46.GL_DITHER);
+		GL46.glDisable(GL46.GL_POINT_SMOOTH);
+		GL46.glDisable(GL46.GL_LINE_SMOOTH);
+		GL46.glDisable(GL46.GL_POLYGON_SMOOTH);
+		GL46.glHint(GL46.GL_POINT_SMOOTH, GL46.GL_DONT_CARE);
+		GL46.glHint(GL46.GL_LINE_SMOOTH, GL46.GL_DONT_CARE);
+		GL46.glHint(GL46.GL_POLYGON_SMOOTH_HINT, GL46.GL_DONT_CARE);
 		
 		while(!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
@@ -103,6 +111,7 @@ public class Application {
 	        GLFW.glfwGetFramebufferSize(window, w, h);
 			Matrix4f projection = new Matrix4f().perspective(45.0f, (float)w.get(0) / (float)h.get(0), 0.1f, 100.0f);
 			ourShader.setMat4("projection", projection);
+			ourShader.setVec2("targetResolution", 320, 240);
 			
 			ourShader.use();
 			

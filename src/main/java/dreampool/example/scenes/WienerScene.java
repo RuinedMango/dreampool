@@ -1,6 +1,7 @@
 package dreampool.example.scenes;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.openal.AL11;
 
 import dreampool.audio.NoiseListener;
@@ -8,6 +9,7 @@ import dreampool.audio.NoiseSource;
 import dreampool.core.Thing;
 import dreampool.core.scene.Scene;
 import dreampool.render.Camera;
+import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 
@@ -16,6 +18,7 @@ public class WienerScene {
 	
 	public WienerScene() {
 		scene = new Scene("winer");
+		scene.fog = new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f);
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());

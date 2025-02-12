@@ -1,0 +1,47 @@
+#version 460 core
+layout(triangles, equal_spacing, ccw) in; // Triangle tessellation mode
+
+in vec3 tcsPos[];       // Input from TCS
+in vec2 tcsTexCoord[];  // Input from TCS
+
+out vec2 TexCoord;       // Output to fragment shader
+out float fogDensity;    // Output to fragment shader
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec2 targetResolution;
+uniform float fogDepthMax;
+uniform float fogDepthMin;
+
+void main() {
+    // Interpolate position using barycentric coordinates (gl_TessCoord)
+    vec3 pos = gl_TessCoord.x * tcsPos[0] 
+             + gl_TessCoord.y * tcsPos[1] 
+             + gl_TessCoord.z * tcsPos[2];
+
+    // Apply transformations
+    vec4 vertInViewSpace = view * model * vec4(pos, 1.0);
+    vec4 vertInClipSpace = projection * vertInViewSpace;
+
+    // Vertex snapping (your original logic)
+    vec2 grid = targetResolution.xy * 0.5;
+    vec4 snapped = vertInClipSpace;
+    snapped.xyz /= snapped.w;                   // Perspective divide
+    snapped.xy = floor(grid * snapped.xy) / grid; // Snap to grid
+    snapped.xyz *= snapped.w;                   // Undo perspective divide
+    gl_Position = snapped;
+
+    // Fog calculation
+    float depth = abs(vertInViewSpace.z / vertInViewSpace.w);
+    fogDensity = clamp(
+        (fogDepthMax - depth) / (fogDepthMax - fogDepthMin), 
+        0.0, 
+        1.0
+    );
+
+    // Interpolate texture coordinates
+    TexCoord = gl_TessCoord.x * tcsTexCoord[0] 
+             + gl_TessCoord.y * tcsTexCoord[1] 
+             + gl_TessCoord.z * tcsTexCoord[2];
+}

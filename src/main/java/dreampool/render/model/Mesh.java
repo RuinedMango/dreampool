@@ -85,7 +85,7 @@ public class Mesh extends Part{
     	model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x), (float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
     	model.scale(transform.size);
     	Application.ourShader.setMat4("model", model);
-    	GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, vertices.size());
+    	GL46.glDrawArrays(GL46.GL_PATCHES, 0, vertices.size());
     	//GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT, 0);
 	}
 }
