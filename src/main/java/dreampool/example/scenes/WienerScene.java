@@ -2,8 +2,6 @@ package dreampool.example.scenes;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.openal.AL11;
-
 import dreampool.audio.NoiseListener;
 import dreampool.audio.NoiseSource;
 import dreampool.core.Thing;
@@ -18,23 +16,23 @@ public class WienerScene {
 	
 	public WienerScene() {
 		scene = new Scene("winer");
-		scene.fog = new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f);
+		scene.fog = new Fog(new Vector4f(1.0f, 0.969f, 0.0f, 1.0f), 10.0f, 50.0f);
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());
 		player.addPart(new PlayerController());
 		player.transform.position = new Vector3f(0, 0, 0);
 		Thing ball1 = new Thing("ball1");
-		ball1.addPart(new Mesh("/models/sphere.obj"));
-		ball1.addPart(new Texture("/images/container.jpg"));
-		ball1.addPart(new Texture("/images/awesomeface.png", 1));
+		ball1.addPart(new Mesh("/models/sphere.obj", false));
+		ball1.addPart(new Texture("/images/white.png"));
+		ball1.addPart(new Texture("/images/white.png", 1));
 		Thing ball2 = new Thing("ball2");
-		ball2.addPart(new Mesh("/models/sphere.obj"));
-		ball2.addPart(new Texture("/images/face.png"));
-		ball2.addPart(new Texture("/images/awesomeface.png", 1));
+		ball2.addPart(new Mesh("/models/sphere.obj", false));
+		ball2.addPart(new Texture("/images/white.png"));
+		ball2.addPart(new Texture("/images/white.png", 1));
 		ball2.transform.position = new Vector3f(0, 0, 2);
 		Thing shaft = new Thing("shaft");		
-		shaft.addPart(new Mesh("/models/FaceCube.obj"));
+		shaft.addPart(new Mesh("/models/FaceCube.obj", false));
 		shaft.addPart(new Texture("/images/face.png"));
 		shaft.addPart(new Texture("/images/doge.png", 1));
 		shaft.transform.position = new Vector3f(0, 20, 1);
@@ -42,7 +40,7 @@ public class WienerScene {
 		Thing sound = new Thing("testicle");
 		NoiseSource soundsource = new NoiseSource("/audio/yell.ogg", false, true);
 		sound.addPart(soundsource);
-		sound.addPart(new Mesh("/models/FaceCube.obj"));
+		sound.addPart(new Mesh("/models/FaceCube.obj", false));
 		sound.addPart(new Texture("/images/face.png"));
 		sound.addPart(new Texture("/images/doge.png", 1));
 		sound.transform.position = new Vector3f(-2f, 2f, 2f);

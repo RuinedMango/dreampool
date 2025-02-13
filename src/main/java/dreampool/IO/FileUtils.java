@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBVorbis;
@@ -38,8 +39,10 @@ public class FileUtils {
 	public static void readObjMeshResource(String path, List<Float> vertices, List<Integer> indices) throws IOException {
 		List<Integer> vertexIndices = new ArrayList<Integer>();
 		List<Integer> uvIndices = new ArrayList<Integer>();
+		List<Integer> normalIndices = new ArrayList<Integer>();
 		List<Vector3f> temp_vertices = new ArrayList<Vector3f>();
 		List<Vector2f> temp_uvs = new ArrayList<Vector2f>();
+		List<Vector3f> temp_normals = new ArrayList<Vector3f>();
 		InputStream modelFile = Class.class.getResourceAsStream(path);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(modelFile));
 		String line;
@@ -54,6 +57,11 @@ public class FileUtils {
 		    	Float[] floats = Arrays.stream(array).map(Float::valueOf).toArray(Float[]::new);
 		    	Vector2f vec = new Vector2f(floats[0], floats[1]);
 		    	temp_uvs.add(vec);
+			} else if(line.startsWith("vn ")) {
+				String[] array = line.replace("vn ", "").split(" ");
+				Float[] floats = Arrays.stream(array).map(Float::valueOf).toArray(Float[]::new);
+				Vector3f vec = new Vector3f(floats[0], floats[1], floats[2]);
+				temp_normals.add(vec);
 			} else if(line.startsWith("f")) {
 		    	String[] array = line.replaceAll("f ", "").split(" ");
 		    	for(String set : array) {
@@ -61,6 +69,7 @@ public class FileUtils {
 		    		Integer[] values = Arrays.stream(indiceArray).map(Integer::valueOf).toArray(Integer[]::new);
 		    		vertexIndices.add(values[0]);
 		    		uvIndices.add(values[1]);
+		    		normalIndices.add(values[2]);
 		    	}
 		    }
 		}
@@ -74,6 +83,11 @@ public class FileUtils {
 			int uvIndex = uvIndices.get(i);
 			Float[] uv = {temp_uvs.get(uvIndex - 1).x, temp_uvs.get(uvIndex - 1).y};
 			for(float value : uv) {
+				vertices.add(value);
+			}
+			int normalIndex = normalIndices.get(i);
+			Float[] normal = {temp_normals.get(normalIndex - 1).x, temp_normals.get(normalIndex - 1).y, temp_normals.get(normalIndex - 1).z};
+			for(float value : normal) {
 				vertices.add(value);
 			}
 		}

@@ -13,6 +13,7 @@ import dreampool.IO.FileUtils;
 import dreampool.core.Part;
 
 public class Mesh extends Part{
+	private boolean flat = true;
 	private List<Float> vertices = new ArrayList<Float>();
 	private List<Integer> indices = new ArrayList<Integer>();
 	static float testvertices[] = {
@@ -63,13 +64,14 @@ public class Mesh extends Part{
 			21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
 	};
 	
-	public Mesh(String path) {
+	public Mesh(String path, boolean flat) {
 		try {
 			FileUtils.readObjMeshResource(path, vertices, indices);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.flat = flat;
 	}
 	
 	@Override
@@ -84,7 +86,8 @@ public class Mesh extends Part{
     	model.translate(transform.position);
     	model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x), (float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
     	model.scale(transform.size);
-    	Application.ourShader.setMat4("model", model);
+    	Application.mainShader.setMat4("model", model);
+    	Application.mainShader.setBool("flatlight", flat);
     	GL46.glDrawArrays(GL46.GL_PATCHES, 0, vertices.size());
     	//GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT, 0);
 	}

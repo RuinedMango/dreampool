@@ -25,9 +25,6 @@ public class PlayerController extends Part{
 	public void Start() {
 		DeviceManager.Singleton.setCursorPosCallback(myMouseCallback());
 		cam = (Camera) thing.getPart("Camera");
-		if(cam == null) {
-			System.out.println("Dick n balls");
-		}
 	}
 	
 	@Override

@@ -3,14 +3,17 @@ layout(vertices = 3) out; // Triangles (3 control points)
 
 in vec3 vsPos[];
 in vec2 vsTexCoord[];
+in vec3 vsNormal[];
 
 out vec3 tcsPos[];       // Output to TES
 out vec2 tcsTexCoord[];  // Output to TES
+out vec3 tcsNormal[];
 
 void main() {
     // Pass data to TES
     tcsPos[gl_InvocationID] = vsPos[gl_InvocationID];
     tcsTexCoord[gl_InvocationID] = vsTexCoord[gl_InvocationID];
+    tcsNormal[gl_InvocationID] = vsNormal[gl_InvocationID];
 
     // Set tessellation levels (adjust via uniforms if needed)
     if (gl_InvocationID == 0) {

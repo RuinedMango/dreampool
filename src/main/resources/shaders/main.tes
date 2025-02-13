@@ -1,11 +1,14 @@
 #version 460 core
-layout(triangles, equal_spacing, ccw) in; // Triangle tessellation mode
+layout(triangles, equal_spacing, cw) in; // Triangle tessellation mode
 
 in vec3 tcsPos[];       // Input from TCS
 in vec2 tcsTexCoord[];  // Input from TCS
+in vec3 tcsNormal[];
 
-out vec2 TexCoord;       // Output to fragment shader
+out vec2 TexCoord;     // Output to fragment shader
+out vec3 Normal;
 out float fogDensity;    // Output to fragment shader
+out vec3 eyePos;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -31,6 +34,8 @@ void main() {
     snapped.xy = floor(grid * snapped.xy) / grid; // Snap to grid
     snapped.xyz *= snapped.w;                   // Undo perspective divide
     gl_Position = snapped;
+    
+    eyePos = vertInViewSpace.xyz;
 
     // Fog calculation
     float depth = abs(vertInViewSpace.z / vertInViewSpace.w);
@@ -44,4 +49,8 @@ void main() {
     TexCoord = gl_TessCoord.x * tcsTexCoord[0] 
              + gl_TessCoord.y * tcsTexCoord[1] 
              + gl_TessCoord.z * tcsTexCoord[2];
+             
+   	Normal = gl_TessCoord.x * tcsNormal[0] 
+           + gl_TessCoord.y * tcsNormal[1] 
+           + gl_TessCoord.z * tcsNormal[2];
 }

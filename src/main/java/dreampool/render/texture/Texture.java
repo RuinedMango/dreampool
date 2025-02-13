@@ -7,7 +7,6 @@ import org.lwjgl.stb.STBImage;
 
 import dreampool.IO.FileUtils;
 import dreampool.core.Part;
-import dreampool.render.model.Mesh;
 
 public class Texture extends Part {
 	private String path;
@@ -17,7 +16,6 @@ public class Texture extends Part {
 	public int height;
 	public int comps;
 	private int unit;
-	public Class[] doBefore = {Mesh.class};
 	
 	public Texture(String path) {
 		this.path = path;

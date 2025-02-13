@@ -19,21 +19,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 
 public class Application {
-	private static long window;
-	static int indices[] = {  // note that we start from 0!
-		    0, 1, 3,   // first triangle
-		    1, 2, 3    // second triangle
-		};  
+	private static long window; 
 	static int VBO;
 	static int VAO;
 	static int EBO;
-	static Vector3f cameraPos = new Vector3f(0.0f, 0.0f, 3.0f);
-	static Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
-	static Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
 	
-	static float fov = 45.0f;
-	
-	public static Shader ourShader;
+	public static Shader mainShader;
 	
 	public static void main(String[] args) {
 		GLFW.glfwInit();
@@ -69,19 +60,21 @@ public class Application {
 		EBO = GL46.glGenBuffers();
 		GL46.glBindBuffer(GL46.GL_ELEMENT_ARRAY_BUFFER, EBO);
 		
-		ourShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
+		mainShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
 		
-		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 5 * Float.BYTES, 0);
+		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 0);
 		GL46.glEnableVertexAttribArray(0);
-		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
+		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
 		GL46.glEnableVertexAttribArray(1);
+		GL46.glVertexAttribPointer(2, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
+		GL46.glEnableVertexAttribArray(2);
 		
 		SceneManager manager = new SceneManager(new WienerScene().scene);
 
-		ourShader.use();
+		mainShader.use();
 		
-		ourShader.setInt("texture1", 0);
-		ourShader.setInt("texture2", 1);
+		mainShader.setInt("texture1", 0);
+		mainShader.setInt("texture2", 1);
 		
 		@SuppressWarnings("unused")
 		DeviceManager device = new DeviceManager(window);
@@ -110,10 +103,14 @@ public class Application {
 	        IntBuffer h = MemoryStack.stackPush().mallocInt(1);
 	        GLFW.glfwGetFramebufferSize(window, w, h);
 			Matrix4f projection = new Matrix4f().perspective(45.0f, (float)w.get(0) / (float)h.get(0), 0.1f, 100.0f);
-			ourShader.setMat4("projection", projection);
-			ourShader.setVec2("targetResolution", 320, 240);
+			mainShader.setMat4("projection", projection);
+			mainShader.setVec2("targetResolution", 320, 240);
 			
-			ourShader.use();
+			mainShader.setVec3("lightDir", new Vector3f(45, 45, 45));
+			mainShader.setVec3("ambientColor", new Vector3f(0.0f, 0.0f, 0.0f));
+			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
+			
+			mainShader.use();
 			
 			GL46.glBindVertexArray(VAO);
 			manager.currentScene.Update();
