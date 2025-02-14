@@ -23,11 +23,11 @@ public class WienerScene {
 		player.addPart(new PlayerController());
 		player.transform.position = new Vector3f(0, 0, 0);
 		Thing ball1 = new Thing("ball1");
-		ball1.addPart(new Mesh("/models/sphere.obj", false));
+		ball1.addPart(new Mesh("/models/sphere.obj", true));
 		ball1.addPart(new Texture("/images/white.png"));
 		ball1.addPart(new Texture("/images/white.png", 1));
 		Thing ball2 = new Thing("ball2");
-		ball2.addPart(new Mesh("/models/sphere.obj", false));
+		ball2.addPart(new Mesh("/models/sphere.obj", true));
 		ball2.addPart(new Texture("/images/white.png"));
 		ball2.addPart(new Texture("/images/white.png", 1));
 		ball2.transform.position = new Vector3f(0, 0, 2);
@@ -44,6 +44,7 @@ public class WienerScene {
 		sound.addPart(new Texture("/images/face.png"));
 		sound.addPart(new Texture("/images/doge.png", 1));
 		sound.transform.position = new Vector3f(-2f, 2f, 2f);
+		ball1.addPart(new Rotator());
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(shaft);

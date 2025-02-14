@@ -107,7 +107,7 @@ public class Application {
 			mainShader.setVec2("targetResolution", 320, 240);
 			
 			mainShader.setVec3("lightDir", new Vector3f(45, 45, 45));
-			mainShader.setVec3("ambientColor", new Vector3f(0.0f, 0.0f, 0.0f));
+			mainShader.setVec3("ambientColor", new Vector3f(0.2f, 0.2f, 0.2f));
 			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 			
 			mainShader.use();
