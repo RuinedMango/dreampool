@@ -103,6 +103,7 @@ public class Shader {
 		FloatBuffer fb = BufferUtils.createFloatBuffer(2);
 		value.get(fb);
 		GL46.glUniform2fv(GL46.glGetUniformLocation(ID, name), fb);
+		fb.clear();
 	}
 	public void setVec3(String name, float x, float y, float z) {
 		GL46.glUniform3f(GL46.glGetUniformLocation(ID, name), x ,y, z);

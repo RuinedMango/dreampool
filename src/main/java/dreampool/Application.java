@@ -2,6 +2,7 @@ package dreampool;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
@@ -12,7 +13,7 @@ import dreampool.IO.DeviceManager;
 import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
-import dreampool.example.scenes.WienerScene;
+import dreampool.example.scenes.ExampleScene;
 import dreampool.render.Shader;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -32,7 +33,7 @@ public class Application {
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 6);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		
-		window = GLFW.glfwCreateWindow(800, 600, "penis", NULL, NULL);
+		window = GLFW.glfwCreateWindow(800, 600, "Winer", NULL, NULL);
 		if(window == NULL) {
 			System.out.println("Failed to create GLFW window");
 			GLFW.glfwTerminate();
@@ -69,7 +70,7 @@ public class Application {
 		GL46.glVertexAttribPointer(2, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
 		GL46.glEnableVertexAttribArray(2);
 		
-		SceneManager manager = new SceneManager(new WienerScene().scene);
+		SceneManager manager = new SceneManager(new ExampleScene().scene);
 
 		mainShader.use();
 		
@@ -93,6 +94,8 @@ public class Application {
 		GL46.glHint(GL46.GL_LINE_SMOOTH, GL46.GL_DONT_CARE);
 		GL46.glHint(GL46.GL_POLYGON_SMOOTH_HINT, GL46.GL_DONT_CARE);
 		
+		Vector2f lightDir = new Vector2f(90, 0);
+		
 		while(!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
 			
@@ -106,7 +109,9 @@ public class Application {
 			mainShader.setMat4("projection", projection);
 			mainShader.setVec2("targetResolution", 320, 240);
 			
-			mainShader.setVec3("lightDir", new Vector3f(45, 45, 45));
+			lightDir.add(new Vector2f(1, 0));
+			
+			mainShader.setVec2("lightDir", lightDir);
 			mainShader.setVec3("ambientColor", new Vector3f(0.2f, 0.2f, 0.2f));
 			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 			
@@ -117,6 +122,8 @@ public class Application {
 			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
+			w.clear();
+			h.clear();
 		}
 		
 		sound.destroy();
