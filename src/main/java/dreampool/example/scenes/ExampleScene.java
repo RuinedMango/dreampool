@@ -21,7 +21,8 @@ public class ExampleScene {
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());
 		player.addPart(new PlayerController());
-		player.transform.position = new Vector3f(3, 0, 0);
+		player.transform.position = new Vector3f(4, 0, 1);
+		player.transform.rotation = new Vector3f(-90, 0, 0);
 		Thing ball1 = new Thing("ball1");
 		ball1.addPart(new Mesh("/models/Sphere.obj", true));
 		ball1.addPart(new Texture("/images/white.png"));
@@ -38,8 +39,8 @@ public class ExampleScene {
 		sound.addPart(new Texture("/images/face.png"));
 		sound.addPart(new Texture("/images/doge.png", 1));
 		sound.transform.position = new Vector3f(-2f, 2f, 2f);
-		ball1.addPart(new Rotator());
-		ball2.addPart(new Rotator());
+		//ball1.addPart(new Rotator());
+		//ball2.addPart(new Rotator());
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);

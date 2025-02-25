@@ -12,6 +12,11 @@ public class Camera extends Part{
 	public Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 	
 	@Override
+	public void Start() {
+		this.front = transform.rotation.normalize();
+	}
+	
+	@Override
 	public void Update() {
 		Vector3f frontPos = new Vector3f();
 		Vector3f cameraPos = transform.position;
