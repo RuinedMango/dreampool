@@ -27,7 +27,7 @@ import java.nio.IntBuffer;
 public class Application {
 	private static long window;
 	static float resDivisor = 2;
-	static boolean wireframe = true;
+	static boolean wireframe = false;
 	static int VBO;
 	static int VAO;
 	static int EBO;
@@ -111,7 +111,7 @@ public class Application {
 		
 		PostShader post = new PostShader("/shaders/dither.frag");
 		post.use();
-		post.setInt("levels", 32);
+		post.setInt("levels", 4);
 		post.setInt("screenTexture", 0);
 		
 		mainShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
