@@ -5,9 +5,10 @@ import org.joml.Vector3f;
 
 import dreampool.Application;
 import dreampool.core.Part;
+import dreampool.ui.Font;
 
 public class Camera extends Part{
-	public Matrix4f matrix = new Matrix4f();
+	public static Matrix4f matrix = new Matrix4f();
 	public Vector3f front = new Vector3f(0.0f, 0.0f, -1.0f);
 	public Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 	

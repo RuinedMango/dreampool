@@ -5,7 +5,10 @@ import org.lwjgl.glfw.GLFW;
 public class Time {
 	public static Time Singleton = null;
 	public static float deltaTime;
-	private float lastFrame;
+	public static int fps;
+	private int fpsCounter = 0;
+	private float lastTime;
+	private float lastFPSUpdateTime;
 	
 	public Time() {
 		if(Singleton == null) {
@@ -16,8 +19,14 @@ public class Time {
 	}
 	
 	public void update() {
-		float currentFrame = (float) GLFW.glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		float currentTime = (float) GLFW.glfwGetTime();
+		deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+		fpsCounter++;
+		if(currentTime - lastFPSUpdateTime > 1.0) {
+			fps = fpsCounter;
+			fpsCounter = 0;
+			lastFPSUpdateTime = currentTime;
+		}
 	}
 }

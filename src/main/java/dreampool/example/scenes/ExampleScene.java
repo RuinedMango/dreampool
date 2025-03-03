@@ -39,8 +39,8 @@ public class ExampleScene {
 		sound.addPart(new Texture("/images/face.png"));
 		sound.addPart(new Texture("/images/doge.png", 1));
 		sound.transform.position = new Vector3f(-2f, 2f, 2f);
-		//ball1.addPart(new Rotator());
-		//ball2.addPart(new Rotator());
+		ball1.addPart(new Rotator());
+		ball2.addPart(new Rotator());
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);

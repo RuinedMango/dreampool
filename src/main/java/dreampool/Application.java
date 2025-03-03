@@ -2,6 +2,7 @@ package dreampool;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -9,6 +10,9 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBEasyFont;
+import org.lwjgl.stb.STBTTBakedChar;
+import org.lwjgl.stb.STBTTFontinfo;
+import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 
 import dreampool.IO.DeviceManager;
@@ -19,12 +23,20 @@ import dreampool.example.scenes.ExampleScene;
 import dreampool.render.BasicShader;
 import dreampool.render.PostShader;
 import dreampool.render.Shader;
+import dreampool.ui.Font;
+
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class Application {
+public class Application {	
+	public static int width;
+	public static int height;
 	private static long window;
 	static float resDivisor = 2;
 	static boolean wireframe = false;
@@ -35,6 +47,9 @@ public class Application {
 	static int RBO;
 	
 	static int FBOtex;
+	
+	static int fontVAO;
+	static int fontVBO;
 	
     static float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
             // positions   // texCoords
@@ -62,6 +77,7 @@ public class Application {
 			return;
 		}
 		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwSwapInterval(1);
 		
 		GL.createCapabilities();
 		
@@ -111,7 +127,7 @@ public class Application {
 		
 		PostShader post = new PostShader("/shaders/dither.frag");
 		post.use();
-		post.setInt("levels", 4);
+		post.setInt("levels",32);
 		post.setInt("screenTexture", 0);
 		
 		mainShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
@@ -125,6 +141,9 @@ public class Application {
 		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
 		GL46.glEnableVertexAttribArray(2);
 		GL46.glVertexAttribPointer(2, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
+        
+		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
+        GL46.glBindVertexArray(0);
 		
 		int quadVAO = GL46.glGenVertexArrays();
 		int quadVBO = GL46.glGenBuffers();
@@ -135,6 +154,23 @@ public class Application {
 		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
 		GL46.glEnableVertexAttribArray(1);
 		
+        GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
+        GL46.glBindVertexArray(0);
+        
+		fontVAO = GL46.glGenVertexArrays();
+		GL46.glBindVertexArray(fontVAO);
+		
+		fontVBO = GL46.glGenBuffers();
+		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, fontVBO);
+		GL46.glBufferData(GL46.GL_ARRAY_BUFFER, 1024 * 1024, GL46.GL_DYNAMIC_DRAW);
+		
+		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, Float.BYTES * 9, 0);
+		GL46.glEnableVertexAttribArray(0);
+		GL46.glVertexAttribPointer(1, 4, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
+		GL46.glEnableVertexAttribArray(1);
+		GL46.glVertexAttribPointer(2, 2, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
+		GL46.glEnableVertexAttribArray(2);
+		
 		SceneManager manager = new SceneManager(new ExampleScene().scene);
 		
 		@SuppressWarnings("unused")
@@ -143,6 +179,9 @@ public class Application {
 		Time time = new Time();
 		
 		manager.currentScene.Start();
+		
+        GL46.glEnable(GL46.GL_BLEND);
+        GL46.glBlendFunc(GL46.GL_SRC_ALPHA, GL46.GL_ONE_MINUS_SRC_ALPHA);
 		
 		GL46.glPatchParameteri(GL46.GL_PATCH_VERTICES, 3);	
 		GL46.glDisable(GL46.GL_DITHER);
@@ -155,7 +194,7 @@ public class Application {
 		
 		Vector2f lightDir = new Vector2f(90, 0);
 		
-		String text = "Dicks out for Harambe";
+		Font font = new Font("/fonts/OpenSans-Light.ttf");
 		
 		if(wireframe) {
 			GL46.glPolygonMode(GL46.GL_FRONT_AND_BACK, GL46.GL_LINE);
@@ -171,6 +210,8 @@ public class Application {
 			GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
 			
 			GLFW.glfwGetFramebufferSize(window, w, h);
+			width = w.get(0);
+			height = h.get(0);
 			Matrix4f projection = new Matrix4f().perspective(45.0f, ((float)w.get(0) / resDivisor) / ((float)h.get(0) / resDivisor), 0.1f, 100.0f);
 			mainShader.use();
 			mainShader.setMat4("projection", projection);
@@ -201,6 +242,8 @@ public class Application {
 			GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
 			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
 			
+			font.renderText("FPS: " + Time.fps, new Vector3f(0.0f, height - 32, 0.0f), new Vector4f(1.0f, 0.0f, 0.0f, 1.0f), 48.0f);
+			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
 			w.clear();
@@ -208,7 +251,7 @@ public class Application {
 		}
 		
 		sound.destroy();
-		
+		 
 		GL46.glDeleteVertexArrays(VAO);
 		GL46.glDeleteBuffers(VBO);
 		GL46.glDeleteBuffers(EBO);

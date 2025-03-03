@@ -93,6 +93,30 @@ public class FileUtils {
 		}
 	}
 	
+    public static ByteBuffer resourceToByteBuffer(String path, int bufferSize) {
+        try (InputStream source = Class.class.getResourceAsStream(path)) {
+            if (source == null) {
+                throw new IOException("Resource not found: " + path);
+            }
+            
+            ByteBuffer buffer = BufferUtils.createByteBuffer(bufferSize);
+            
+            byte[] buf = new byte[1024];
+            while (true) {
+                int bytes = source.read(buf);
+                if (bytes == -1) break;
+                buffer.put(buf, 0, bytes);
+            }
+            
+            buffer.flip();
+            return buffer;
+        } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+	
 	public static ShortBuffer readVorbis(String path, STBVorbisInfo info) {
         InputStream vorbisFile = Class.class.getResourceAsStream(path); 
         
