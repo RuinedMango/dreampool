@@ -169,9 +169,6 @@ public class Application {
 		
 		manager.currentScene.Start();
 		
-        GL46.glEnable(GL46.GL_BLEND);
-        GL46.glBlendFunc(GL46.GL_SRC_ALPHA, GL46.GL_ONE_MINUS_SRC_ALPHA);
-		
 		GL46.glPatchParameteri(GL46.GL_PATCH_VERTICES, 3);	
 		GL46.glDisable(GL46.GL_DITHER);
 		GL46.glDisable(GL46.GL_POINT_SMOOTH);
@@ -228,7 +225,7 @@ public class Application {
 			GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
 			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
 			
-			//cursive.renderText("I have cancer", new Vector3f(0,0,0), new Vector4f(0, 0, 1, 1), 82);
+			//cursive.renderText("I have cancer", new Vector3f(0,500,0), new Vector4f(0, 0, 1, 1), 82);
 			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();

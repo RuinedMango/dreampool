@@ -76,6 +76,7 @@ public class Mesh extends Part{
 	
 	@Override
 	public void Update() {
+		GL46.glEnable(GL46.GL_DEPTH_TEST);
 		Application.mainShader.use();
 		GL46.glBindVertexArray(Application.VAO);
 		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);

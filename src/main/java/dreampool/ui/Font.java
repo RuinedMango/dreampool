@@ -138,6 +138,7 @@ public class Font{
 		
 		int vertexCount = vertices.size() / 9;
 		
+		GL46.glDisable(GL46.GL_DEPTH_TEST);
 		shader.use();
 		
 		GL46.glActiveTexture(GL46.GL_TEXTURE0);
