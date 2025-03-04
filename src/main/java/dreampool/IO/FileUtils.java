@@ -16,7 +16,6 @@ import java.util.Scanner;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector3i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBVorbis;

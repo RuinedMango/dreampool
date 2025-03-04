@@ -2,14 +2,19 @@ package dreampool.example.scenes;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+
+import dreampool.Application;
 import dreampool.audio.NoiseListener;
 import dreampool.audio.NoiseSource;
 import dreampool.core.Thing;
+import dreampool.core.Time;
 import dreampool.core.scene.Scene;
 import dreampool.render.Camera;
 import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
+import dreampool.ui.Font;
+import dreampool.ui.parts.Text;
 
 public class ExampleScene {
 	public Scene scene;
@@ -17,6 +22,8 @@ public class ExampleScene {
 	public ExampleScene() {
 		scene = new Scene("example");
 		scene.fog = new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f);
+		Font arial = new Font("/fonts/OpenSans-Light.ttf");
+		Font cursive = new Font("/fonts/ShadeBlue.ttf");
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());
@@ -41,10 +48,18 @@ public class ExampleScene {
 		sound.transform.position = new Vector3f(-2f, 2f, 2f);
 		ball1.addPart(new Rotator());
 		ball2.addPart(new Rotator());
+		Thing fps = new Thing("fps");
+		Text text = new Text("Fps: " + Time.fps, 32, 0, 700, 255, 0, 0, 1, arial);
+		fps.addPart(text);
+		fps.addPart(new FPSDisplay(text));
+		Thing cancer = new Thing("cancer");
+		cancer.addPart(new Text("I have cancer", 48, 0, 0, 0, 0, 255, 1, cursive));
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);
 		scene.addThing(player);
+		scene.addThing(fps);
+		scene.addThing(cancer);
 		soundsource.play();
 	}
 }

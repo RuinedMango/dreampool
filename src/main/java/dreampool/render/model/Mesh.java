@@ -76,6 +76,9 @@ public class Mesh extends Part{
 	
 	@Override
 	public void Update() {
+		Application.mainShader.use();
+		GL46.glBindVertexArray(Application.VAO);
+		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);
 		float[] vertexArray = new float[vertices.size()];
 		for(int i = 0; i < vertices.size(); i++) vertexArray[i] = vertices.get(i);
 		float[] indiceArray = new float[indices.size()];

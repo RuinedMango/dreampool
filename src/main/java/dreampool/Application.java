@@ -4,15 +4,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.joml.Vector2f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.stb.STBEasyFont;
-import org.lwjgl.stb.STBTTBakedChar;
-import org.lwjgl.stb.STBTTFontinfo;
-import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 
 import dreampool.IO.DeviceManager;
@@ -20,28 +15,22 @@ import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
 import dreampool.example.scenes.ExampleScene;
-import dreampool.render.BasicShader;
 import dreampool.render.PostShader;
 import dreampool.render.Shader;
 import dreampool.ui.Font;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Application {	
 	public static int width;
 	public static int height;
+	public static float resDivisor = 2;
 	private static long window;
-	static float resDivisor = 2;
 	static boolean wireframe = false;
-	static int VBO;
-	static int VAO;
+	public static int VBO;
+	public static int VAO;
 	static int EBO;
 	static int FBO;
 	static int RBO;
@@ -194,13 +183,11 @@ public class Application {
 		
 		Vector2f lightDir = new Vector2f(90, 0);
 		
-		Font font = new Font("/fonts/OpenSans-Light.ttf");
-		Font font1 = new Font("/fonts/ShadeBlue.ttf");
-		
 		if(wireframe) {
 			GL46.glPolygonMode(GL46.GL_FRONT_AND_BACK, GL46.GL_LINE);
 		}
 		
+		Font cursive = new Font("/fonts/ShadeBlue.ttf");
 		while(!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
 			
@@ -225,8 +212,6 @@ public class Application {
 			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 			
 			GL46.glViewport(0, 0, (int) (w.get(0) / resDivisor), (int) (h.get(0) / resDivisor));
-			GL46.glBindVertexArray(VAO);
-			GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, VBO);
 			manager.currentScene.Update();
 			
 			GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
@@ -243,8 +228,7 @@ public class Application {
 			GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
 			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
 			
-			font.renderText("FPS: " + Time.fps, new Vector3f(0.0f, height - 32, 0.0f), new Vector4f(1.0f, 0.0f, 0.0f, 1.0f), 48.0f);
-			font1.renderText("I have cancer", new Vector3f(0.0f, 4.0f, 0.0f), new Vector4f(0.0f, 1.0f, 0.0f, 1.0f), 48.0f);
+			//cursive.renderText("I have cancer", new Vector3f(0,0,0), new Vector4f(0, 0, 1, 1), 82);
 			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();

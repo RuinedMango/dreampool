@@ -11,24 +11,18 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.stb.STBImageWrite;
 import org.lwjgl.stb.STBTTAlignedQuad;
-import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
-import org.lwjgl.stb.STBTTPackedchar.Buffer;
 import org.lwjgl.stb.STBTruetype;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
 import dreampool.Application;
 import dreampool.IO.FileUtils;
 import dreampool.render.BasicShader;
-import dreampool.render.Camera;
 
-public class Font {
+public class Font{
 	public ByteBuffer bitmap;
+	public static Matrix4f altProj = null;
 	
 	private int texture;
 	
@@ -150,7 +144,11 @@ public class Font {
 		GL46.glBindTexture(GL46.GL_TEXTURE_2D, texture);
 		
 		shader.setInt("uFontAtlasTexture", 0);
-		shader.setMat4("projection", new Matrix4f().ortho(0, Application.width, 0, Application.height, -1, 1));
+		if(altProj == null) {
+			shader.setMat4("projection", new Matrix4f().ortho(0, Application.width, 0, Application.height, -1, 1));
+		}else {
+			shader.setMat4("projection", altProj);
+		}
 		
 		GL46.glBindVertexArray(VAO);
 		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, VBO);
