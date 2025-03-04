@@ -195,6 +195,7 @@ public class Application {
 		Vector2f lightDir = new Vector2f(90, 0);
 		
 		Font font = new Font("/fonts/OpenSans-Light.ttf");
+		Font font1 = new Font("/fonts/ShadeBlue.ttf");
 		
 		if(wireframe) {
 			GL46.glPolygonMode(GL46.GL_FRONT_AND_BACK, GL46.GL_LINE);
@@ -243,6 +244,7 @@ public class Application {
 			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
 			
 			font.renderText("FPS: " + Time.fps, new Vector3f(0.0f, height - 32, 0.0f), new Vector4f(1.0f, 0.0f, 0.0f, 1.0f), 48.0f);
+			font1.renderText("I have cancer", new Vector3f(0.0f, 4.0f, 0.0f), new Vector4f(0.0f, 1.0f, 0.0f, 1.0f), 48.0f);
 			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
