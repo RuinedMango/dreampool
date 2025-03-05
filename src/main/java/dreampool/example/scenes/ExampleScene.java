@@ -3,7 +3,6 @@ package dreampool.example.scenes;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import dreampool.Application;
 import dreampool.audio.NoiseListener;
 import dreampool.audio.NoiseSource;
 import dreampool.core.Thing;
@@ -53,7 +52,7 @@ public class ExampleScene {
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
 		Thing cancer = new Thing("cancer");
-		cancer.addPart(new Text("I have cancer", 48, 0, 0, 0, 0, 255, 1, cursive));
+		cancer.addPart(new Text("I have cancer", 48, 50, 50, 0, 0, 100, 1, cursive));
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);

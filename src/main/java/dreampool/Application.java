@@ -2,7 +2,6 @@ package dreampool;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
@@ -17,8 +16,6 @@ import dreampool.core.scene.SceneManager;
 import dreampool.example.scenes.ExampleScene;
 import dreampool.render.PostShader;
 import dreampool.render.Shader;
-import dreampool.ui.Font;
-
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
@@ -184,7 +181,6 @@ public class Application {
 			GL46.glPolygonMode(GL46.GL_FRONT_AND_BACK, GL46.GL_LINE);
 		}
 		
-		Font cursive = new Font("/fonts/ShadeBlue.ttf");
 		while(!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
 			
@@ -224,8 +220,6 @@ public class Application {
 			GL46.glBufferData(GL46.GL_ARRAY_BUFFER, quadVertices, GL46.GL_STATIC_DRAW);
 			GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
 			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
-			
-			//cursive.renderText("I have cancer", new Vector3f(0,500,0), new Vector4f(0, 0, 1, 1), 82);
 			
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
