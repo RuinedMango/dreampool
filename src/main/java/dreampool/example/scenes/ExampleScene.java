@@ -21,7 +21,7 @@ public class ExampleScene {
 	public ExampleScene() {
 		scene = new Scene("example");
 		scene.fog = new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f);
-		Font arial = new Font("/fonts/OpenSans-Light.ttf");
+		Font arial = new Font("/fonts/Oswald-Regular.ttf");
 		Font cursive = new Font("/fonts/ShadeBlue.ttf");
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
@@ -52,7 +52,7 @@ public class ExampleScene {
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
 		Thing cancer = new Thing("cancer");
-		cancer.addPart(new Text("I have cancer", 48, 50, 50, 0, 0, 100, 1, cursive));
+		cancer.addPart(new Text("I have cancer", 48, 50, 50, 255, 0, 100, 1, cursive));
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);
