@@ -17,6 +17,6 @@ public class FPSDisplay extends Part{
 	@Override
 	public void Update() {
 		text.text = "Fps: " + Time.fps;
-		text.position = new Vector2f(0, (float) (Application.height - (text.size * 0.75)));
+		text.position = new Vector2f(10, (float) (Application.height - (text.size * 0.75)));
 	}
 }

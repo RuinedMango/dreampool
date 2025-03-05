@@ -63,7 +63,6 @@ public class Application {
 			return;
 		}
 		GLFW.glfwMakeContextCurrent(window);
-		GLFW.glfwSwapInterval(1);
 		
 		GL.createCapabilities();
 		

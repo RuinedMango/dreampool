@@ -48,11 +48,11 @@ public class ExampleScene {
 		ball1.addPart(new Rotator());
 		ball2.addPart(new Rotator());
 		Thing fps = new Thing("fps");
-		Text text = new Text("Fps: " + Time.fps, 32, 0, 700, 255, 0, 0, 1, arial);
+		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 255, 0, 0, 1, arial);
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
 		Thing cancer = new Thing("cancer");
-		cancer.addPart(new Text("I have cancer", 48, 50, 50, 255, 0, 100, 1, cursive));
+		cancer.addPart(new Text("I have cancer", 48, 50, 50, 255, 100, 100, 1, cursive));
 		scene.addThing(ball1);
 		scene.addThing(ball2);
 		scene.addThing(sound);
