@@ -11,8 +11,6 @@
     <maven.compiler.source>1.8</maven.compiler.source>
 	<lwjgl.version>3.4.0-SNAPSHOT</lwjgl.version>
 	<joml.version>1.10.7</joml.version>
-	<steamworks4j.version>1.9.0</steamworks4j.version>
-	<steamworks4j-server.version>1.9.0</steamworks4j-server.version>
 </properties>
 
 <profiles>
@@ -240,11 +238,6 @@
 		<groupId>org.joml</groupId>
 		<artifactId>joml</artifactId>
 		<version>${joml.version}</version>
-	</dependency>
-		<dependency>
-		<groupId>com.code-disaster.steamworks4j</groupId>
-		<artifactId>steamworks4j</artifactId>
-		<version>${steamworks4j.version}</version>
 	</dependency>
 </dependencies>
 

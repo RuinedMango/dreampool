@@ -64,6 +64,9 @@ public class Mesh extends Part{
 			21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
 	};
 	
+	float[] vertexArray;
+	float[] indiceArray;
+	
 	public Mesh(String path, boolean flat) {
 		try {
 			FileUtils.readObjMeshResource(path, vertices, indices);
@@ -75,15 +78,19 @@ public class Mesh extends Part{
 	}
 	
 	@Override
+	public void Start() {
+		vertexArray = new float[vertices.size()];
+		for(int i = 0; i < vertices.size(); i++) vertexArray[i] = vertices.get(i);
+		indiceArray = new float[indices.size()];
+		for(int i = 0; i < indices.size(); i++) indiceArray[i] = indices.get(i);
+	}
+	
+	@Override
 	public void Update() {
 		GL46.glEnable(GL46.GL_DEPTH_TEST);
 		Application.mainShader.use();
 		GL46.glBindVertexArray(Application.VAO);
 		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);
-		float[] vertexArray = new float[vertices.size()];
-		for(int i = 0; i < vertices.size(); i++) vertexArray[i] = vertices.get(i);
-		float[] indiceArray = new float[indices.size()];
-		for(int i = 0; i < indices.size(); i++) indiceArray[i] = indices.get(i);
 		GL46.glBufferData(GL46.GL_ARRAY_BUFFER, vertexArray, GL46.GL_STATIC_DRAW);
 		GL46.glBufferData(GL46.GL_ELEMENT_ARRAY_BUFFER, indiceArray, GL46.GL_STATIC_DRAW);
 		Matrix4f model = new Matrix4f();

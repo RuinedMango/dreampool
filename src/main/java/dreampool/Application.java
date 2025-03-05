@@ -63,6 +63,7 @@ public class Application {
 			return;
 		}
 		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwSwapInterval(0); // Disables VSync
 		
 		GL.createCapabilities();
 		
@@ -197,7 +198,7 @@ public class Application {
 			mainShader.setMat4("projection", projection);
 			mainShader.setVec2("targetResolution", (int) (w.get(0) / resDivisor) / 2, (int) (h.get(0) / resDivisor) / 2);
 			
-			lightDir.add(new Vector2f(1, 0));
+			lightDir.add(new Vector2f(75 * Time.deltaTime, 0));
 			
 			mainShader.setVec2("lightDir", lightDir);
 			mainShader.setVec3("ambientColor", new Vector3f(0.2f, 0.2f, 0.2f));
