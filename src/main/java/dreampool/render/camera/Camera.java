@@ -1,4 +1,4 @@
-package dreampool.render;
+package dreampool.render.camera;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -7,9 +7,20 @@ import dreampool.Application;
 import dreampool.core.Part;
 
 public class Camera extends Part{
+	public static Camera Singleton;
+	public Frustum frustum;
 	public Matrix4f matrix = new Matrix4f();
 	public Vector3f front = new Vector3f(0.0f, 0.0f, -1.0f);
 	public Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
+	public Vector3f right = new Vector3f();
+	
+	public Camera() {
+		if(Singleton == null) {
+			Singleton = this;
+		}else {
+			System.out.println("Camera already exists");
+		}
+	}
 	
 	@Override
 	public void Start() {
@@ -18,6 +29,8 @@ public class Camera extends Part{
 	
 	@Override
 	public void Update() {
+		front.cross(up, right).normalize();
+		right.cross(front, up).normalize();
 		Vector3f frontPos = new Vector3f();
 		Vector3f cameraPos = transform.position;
 		cameraPos.add(front, frontPos);

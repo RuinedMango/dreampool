@@ -7,7 +7,7 @@ import dreampool.audio.NoiseListener;
 import dreampool.core.Thing;
 import dreampool.core.Time;
 import dreampool.core.scene.Scene;
-import dreampool.render.Camera;
+import dreampool.render.camera.Camera;
 import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
@@ -30,7 +30,7 @@ public class ExampleScene {
 		
 		for(int i = 0; i < 200; i++) {
 			Thing ball = new Thing("ball" + i);
-			ball.addPart(new Mesh("/models/Sphere.obj", false));
+			ball.addPart(new Mesh("/models/Sphere.obj", (int)i % 2 >= 1 ? false : true));
 			ball.addPart(new Texture("/images/white.png"));
 			ball.addPart(new Texture("/images/white.png", 1));
 			ball.addPart(new Rotator());

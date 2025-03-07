@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import dreampool.IO.DeviceManager;
 import dreampool.core.Part;
 import dreampool.core.Time;
-import dreampool.render.Camera;
+import dreampool.render.camera.Camera;
 
 public class PlayerController extends Part{
 	static boolean firstMouse = true;

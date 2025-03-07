@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
 import dreampool.core.Part;
-import dreampool.render.Camera;
+import dreampool.render.camera.Camera;
 
 public class NoiseListener extends Part{
 	private Camera cam;
