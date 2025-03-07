@@ -63,7 +63,7 @@ public class Application {
 			return;
 		}
 		GLFW.glfwMakeContextCurrent(window);
-		GLFW.glfwSwapInterval(0); // Disables VSync
+		GLFW.glfwSwapInterval(0);
 		
 		GL.createCapabilities();
 		
