@@ -28,7 +28,7 @@ public class ExampleScene {
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 		
-		for(int i = 0; i < 100; i++) {
+		for(int i = 0; i < 200; i++) {
 			Thing ball = new Thing("ball" + i);
 			ball.addPart(new Mesh("/models/Sphere.obj", false));
 			ball.addPart(new Texture("/images/white.png"));
