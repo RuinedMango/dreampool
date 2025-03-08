@@ -21,6 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 
 public class Application {	
+	public static Matrix4f projection;
 	public static int width;
 	public static int height;
 	public static float resDivisor = 2;
@@ -193,7 +194,7 @@ public class Application {
 			GLFW.glfwGetFramebufferSize(window, w, h);
 			width = w.get(0);
 			height = h.get(0);
-			Matrix4f projection = new Matrix4f().perspective(70.0f, ((float)w.get(0) / resDivisor) / ((float)h.get(0) / resDivisor), 0.1f, 50.0f);
+			projection = new Matrix4f().perspective(70.0f, ((float)w.get(0) / resDivisor) / ((float)h.get(0) / resDivisor), 0.1f, 50.0f);
 			mainShader.use();
 			mainShader.setMat4("projection", projection);
 			mainShader.setVec2("targetResolution", (int) (w.get(0) / resDivisor) / 2, (int) (h.get(0) / resDivisor) / 2);

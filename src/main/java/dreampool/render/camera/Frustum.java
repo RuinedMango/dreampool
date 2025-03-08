@@ -1,41 +1,77 @@
 package dreampool.render.camera;
 
-import org.joml.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 public class Frustum {
-	public class Plane{
-		Vector3f normal = new Vector3f(0.0f, 1.0f, 0.0f);
-		float distance = 0.0f;
-		
-		public Plane(Vector3f p1, Vector3f norm) {
-			normal = norm.normalize();
-			distance = normal.dot(p1);
-		}
-		
-		float getSignedDistanceToPlane(Vector3f point) {
-			return normal.dot(point) - distance;
-		}
-	}
-	
-	Plane topFace;
-	Plane bottomFace;
-	Plane rightFace;
-	Plane leftFace;
-	Plane farFace;
-	Plane nearFace;
-	
-	public Frustum(float aspect, float fovY, float zNear, float zFar) {
-		float halfVSide = (float) (zFar * Math.tan(Math.toRadians(fovY * 0.5)));
-		float halfHSide = halfVSide * aspect;
-		Vector3f frontMultFar = null;
-		Camera.Singleton.front.mul(zFar, frontMultFar);
-		
-		nearFace = new Plane(Camera.Singleton.transform.position.add(Camera.Singleton.front.mul(zNear)), Camera.Singleton.front);
-		farFace = new Plane(Camera.Singleton.transform.position.add(frontMultFar), Camera.Singleton.front.negate());
-		
-		rightFace = new Plane(Camera.Singleton.transform.position, frontMultFar.min(Camera.Singleton.right.mul(halfHSide), Camera.Singleton.up));
-		leftFace = new Plane(Camera.Singleton.transform.position, Camera.Singleton.up.cross(frontMultFar.add(Camera.Singleton.right.mul(halfHSide))));
-		topFace = new Plane(Camera.Singleton.transform.position, Camera.Singleton.right.cross(frontMultFar.min(Camera.Singleton.up.mul(halfVSide))));
-		bottomFace = new Plane(Camera.Singleton.transform.position, frontMultFar.add(Camera.Singleton.up.mul(halfVSide)).cross(Camera.Singleton.right));
-	}
+    public final Vector4f[] planes;
+
+    public Frustum() {
+        planes = new Vector4f[6];
+        for (int i = 0; i < 6; i++) {
+            planes[i] = new Vector4f();
+        }
+    }
+
+    public void update(Matrix4f viewProjMatrix) {
+        // Left plane: row3 + row0
+        planes[0].set(
+                viewProjMatrix.m30() + viewProjMatrix.m00(),
+                viewProjMatrix.m31() + viewProjMatrix.m01(),
+                viewProjMatrix.m32() + viewProjMatrix.m02(),
+                viewProjMatrix.m33() + viewProjMatrix.m03()
+        );
+        normalizePlane(planes[0]);
+
+        // Right plane: row3 - row0
+        planes[1].set(
+                viewProjMatrix.m30() - viewProjMatrix.m00(),
+                viewProjMatrix.m31() - viewProjMatrix.m01(),
+                viewProjMatrix.m32() - viewProjMatrix.m02(),
+                viewProjMatrix.m33() - viewProjMatrix.m03()
+        );
+        normalizePlane(planes[1]);
+
+        // Bottom plane: row3 + row1
+        planes[2].set(
+                viewProjMatrix.m30() + viewProjMatrix.m10(),
+                viewProjMatrix.m31() + viewProjMatrix.m11(),
+                viewProjMatrix.m32() + viewProjMatrix.m12(),
+                viewProjMatrix.m33() + viewProjMatrix.m13()
+        );
+        normalizePlane(planes[2]);
+
+        // Top plane: row3 - row1
+        planes[3].set(
+                viewProjMatrix.m30() - viewProjMatrix.m10(),
+                viewProjMatrix.m31() - viewProjMatrix.m11(),
+                viewProjMatrix.m32() - viewProjMatrix.m12(),
+                viewProjMatrix.m33() - viewProjMatrix.m13()
+        );
+        normalizePlane(planes[3]);
+
+        // Near plane: row3 + row2
+        planes[4].set(
+                viewProjMatrix.m30() + viewProjMatrix.m20(),
+                viewProjMatrix.m31() + viewProjMatrix.m21(),
+                viewProjMatrix.m32() + viewProjMatrix.m22(),
+                viewProjMatrix.m33() + viewProjMatrix.m23()
+        );
+        normalizePlane(planes[4]);
+
+        // Far plane: row3 - row2
+        planes[5].set(
+                viewProjMatrix.m30() - viewProjMatrix.m20(),
+                viewProjMatrix.m31() - viewProjMatrix.m21(),
+                viewProjMatrix.m32() - viewProjMatrix.m22(),
+                viewProjMatrix.m33() - viewProjMatrix.m23()
+        );
+        normalizePlane(planes[5]);
+    }
+
+    private void normalizePlane(Vector4f plane) {
+        float length = (float) Math.sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
+        if (length == 0.0f) return;
+        plane.div(length);
+    }
 }

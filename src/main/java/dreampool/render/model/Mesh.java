@@ -14,8 +14,11 @@ import org.lwjgl.opengl.GL46;
 import dreampool.Application;
 import dreampool.IO.FileUtils;
 import dreampool.core.Part;
+import dreampool.render.camera.Camera;
 
 public class Mesh extends Part{
+	public boolean inFrustum;
+	
 	private String path;
 	private boolean flat = true;
 	private List<Float> vertices = new ArrayList<Float>();
@@ -104,19 +107,16 @@ public class Mesh extends Part{
 		try {
 			FileUtils.readObjMeshResource(path, loadedVertices, loadedIndices);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
         synchronized (meshCache) {
-            // Double-check if another thread added the entry while loading
             CacheEntry existingEntry = meshCache.get(path);
             if (existingEntry != null) {
                 this.vertices = existingEntry.vertices;
                 this.indices = existingEntry.indices;
                 existingEntry.refCount++;
             } else {
-                // Create new cache entry and store it
                 CacheEntry newEntry = new CacheEntry(loadedVertices, loadedIndices);
                 meshCache.put(path, newEntry);
                 this.vertices = newEntry.vertices;
@@ -135,20 +135,22 @@ public class Mesh extends Part{
 	
 	@Override
 	public void Update() {
-		GL46.glEnable(GL46.GL_DEPTH_TEST);
-		Application.mainShader.use();
-		GL46.glBindVertexArray(Application.VAO);
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);
-		GL46.glBufferData(GL46.GL_ARRAY_BUFFER, vertexArray, GL46.GL_STATIC_DRAW);
-		GL46.glBufferData(GL46.GL_ELEMENT_ARRAY_BUFFER, indiceArray, GL46.GL_STATIC_DRAW);
-		Matrix4f model = new Matrix4f();
-    	model.translate(transform.position);
-    	model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x), (float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
-    	model.scale(transform.size);
-    	Application.mainShader.setMat4("model", model);
-    	Application.mainShader.setBool("flatlight", flat);
-    	GL46.glDrawArrays(GL46.GL_PATCHES, 0, vertices.size());
-    	//GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT, 0);
+		if(inFrustum) {
+			GL46.glEnable(GL46.GL_DEPTH_TEST);
+			Application.mainShader.use();
+			GL46.glBindVertexArray(Application.VAO);
+			GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);
+			GL46.glBufferData(GL46.GL_ARRAY_BUFFER, vertexArray, GL46.GL_STATIC_DRAW);
+			GL46.glBufferData(GL46.GL_ELEMENT_ARRAY_BUFFER, indiceArray, GL46.GL_STATIC_DRAW);
+			Matrix4f model = new Matrix4f();
+		    model.translate(transform.position);
+		    model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x), (float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
+		    model.scale(transform.size);
+		    Application.mainShader.setMat4("model", model);
+		    Application.mainShader.setBool("flatlight", flat);
+		    GL46.glDrawArrays(GL46.GL_PATCHES, 0, vertices.size());
+		    //GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT, 0);
+		}
 	}
 	
 	public void destroy() {
