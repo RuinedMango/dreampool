@@ -9,7 +9,7 @@ import dreampool.render.fog.Fog;
 public class Scene{
 	public Fog fog;
 	public String name;
-	public List<Thing> things = new ArrayList<Thing>();
+	public List<Thing> things = new ArrayList<>();
 
 	public Scene(String name){
 		this.name = name;

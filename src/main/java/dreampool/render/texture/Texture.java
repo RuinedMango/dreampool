@@ -5,7 +5,8 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.stb.STBImage;
 
 import dreampool.IO.FileUtils;
@@ -44,20 +45,20 @@ public class Texture extends Part{
 		}
 
 		this.path = path;
-		ID = GL46.glGenTextures();
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, ID);
+		ID = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, ID);
 
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_WRAP_S, GL46.GL_REPEAT);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_WRAP_T, GL46.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MIN_FILTER, GL46.GL_NEAREST);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MAG_FILTER, GL46.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
 		try{
 			FileUtils.readImageResource(this);
 		}catch (IOException e){
 			e.printStackTrace();
-			GL46.glDeleteTextures(ID);
+			GL11.glDeleteTextures(ID);
 			this.ID = 0;
 			return;
 		}
@@ -66,15 +67,15 @@ public class Texture extends Part{
 
 		if (comps == 3){
 			if ((width & 3) != 0){
-				GL46.glPixelStorei(GL46.GL_UNPACK_ALIGNMENT, 2 - (width & 1));
+				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 2 - (width & 1));
 			}
-			format = GL46.GL_RGB;
+			format = GL11.GL_RGB;
 		}else{
-			format = GL46.GL_RGBA;
+			format = GL11.GL_RGBA;
 		}
 
 		if (data != null){
-			GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL46.GL_UNSIGNED_BYTE, data);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL11.GL_UNSIGNED_BYTE, data);
 		}
 		STBImage.stbi_image_free(data);
 
@@ -96,8 +97,8 @@ public class Texture extends Part{
 
 	@Override
 	public void Update(){
-		GL46.glActiveTexture(GL46.GL_TEXTURE0 + unit);
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, ID);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, ID);
 	}
 
 	public String getPath(){
@@ -114,7 +115,7 @@ public class Texture extends Part{
 			if (entry != null){
 				entry.refCount--;
 				if (entry.refCount <= 0){
-					GL46.glDeleteTextures(entry.id);
+					GL11.glDeleteTextures(entry.id);
 					textureCache.remove(path);
 				}
 			}

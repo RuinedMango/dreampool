@@ -10,7 +10,11 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryStack;
 
 import dreampool.IO.DeviceManager;
@@ -65,26 +69,26 @@ public class Application{
 
 		GL.createCapabilities();
 
-		GL46.glViewport(0, 0, 800, 600);
-		GL46.glEnable(GL46.GL_CULL_FACE);
-		GL46.glCullFace(GL46.GL_BACK);
+		GL11.glViewport(0, 0, 800, 600);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 		GLFW.glfwSetFramebufferSizeCallback(window, myBufferCallback());
 
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
 		AudioDevice sound = new AudioDevice();
 
-		VAO = GL46.glGenVertexArrays();
-		GL46.glBindVertexArray(VAO);
+		VAO = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(VAO);
 
-		VBO = GL46.glGenBuffers();
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, VBO);
+		VBO = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
 
-		EBO = GL46.glGenBuffers();
-		GL46.glBindBuffer(GL46.GL_ELEMENT_ARRAY_BUFFER, EBO);
+		EBO = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-		FBO = GL46.glGenFramebuffers();
-		GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, FBO);
+		FBO = GL30.glGenFramebuffers();
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
 
 		IntBuffer w = MemoryStack.stackPush().mallocInt(1);
 		IntBuffer h = MemoryStack.stackPush().mallocInt(1);
@@ -92,21 +96,21 @@ public class Application{
 		int initialWidth = w.get(0);
 		int initialHeight = h.get(0);
 
-		FBOtex = GL46.glGenTextures();
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
-		GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGB16F, (int)(initialWidth / resDivisor), (int)(initialHeight / resDivisor), 0, GL46.GL_RGB, GL46.GL_FLOAT, NULL);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MAG_FILTER, GL46.GL_NEAREST);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MIN_FILTER, GL46.GL_NEAREST);
-		GL46.glFramebufferTexture2D(GL46.GL_FRAMEBUFFER, GL46.GL_COLOR_ATTACHMENT0, GL46.GL_TEXTURE_2D, FBOtex, 0);
+		FBOtex = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, FBOtex);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGB16F, (int)(initialWidth / resDivisor), (int)(initialHeight / resDivisor), 0, GL11.GL_RGB, GL11.GL_FLOAT, NULL);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, FBOtex, 0);
 
-		RBO = GL46.glGenRenderbuffers();
-		GL46.glBindRenderbuffer(GL46.GL_RENDERBUFFER, RBO);
-		GL46.glRenderbufferStorage(GL46.GL_RENDERBUFFER, GL46.GL_DEPTH24_STENCIL8, (int)(initialWidth / resDivisor), (int)(initialHeight / resDivisor));
-		GL46.glFramebufferRenderbuffer(GL46.GL_FRAMEBUFFER, GL46.GL_DEPTH_STENCIL_ATTACHMENT, GL46.GL_RENDERBUFFER, RBO);
-		if (GL46.glCheckFramebufferStatus(GL46.GL_FRAMEBUFFER) != GL46.GL_FRAMEBUFFER_COMPLETE){
+		RBO = GL30.glGenRenderbuffers();
+		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, RBO);
+		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH24_STENCIL8, (int)(initialWidth / resDivisor), (int)(initialHeight / resDivisor));
+		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, RBO);
+		if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE){
 			System.out.println("Framebuffer is not complete");
 		}
-		GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
 		PostShader post = new PostShader("/shaders/dither.frag");
 		post.use();
@@ -118,41 +122,41 @@ public class Application{
 		mainShader.setInt("texture1", 0);
 		mainShader.setInt("texture2", 1);
 
-		GL46.glEnableVertexAttribArray(0);
-		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 0);
-		GL46.glEnableVertexAttribArray(1);
-		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
-		GL46.glEnableVertexAttribArray(2);
-		GL46.glVertexAttribPointer(2, 3, GL46.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 8 * Float.BYTES, 0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
+		GL20.glEnableVertexAttribArray(2);
+		GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
 
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
-		GL46.glBindVertexArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
 
-		int quadVAO = GL46.glGenVertexArrays();
-		int quadVBO = GL46.glGenBuffers();
-		GL46.glBindVertexArray(quadVAO);
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, quadVBO);
-		GL46.glVertexAttribPointer(0, 2, GL46.GL_FLOAT, false, 4 * Float.BYTES, 0);
-		GL46.glEnableVertexAttribArray(0);
-		GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-		GL46.glEnableVertexAttribArray(1);
+		int quadVAO = GL30.glGenVertexArrays();
+		int quadVBO = GL15.glGenBuffers();
+		GL30.glBindVertexArray(quadVAO);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
+		GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 4 * Float.BYTES, 0);
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
+		GL20.glEnableVertexAttribArray(1);
 
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
-		GL46.glBindVertexArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
 
-		fontVAO = GL46.glGenVertexArrays();
-		GL46.glBindVertexArray(fontVAO);
+		fontVAO = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(fontVAO);
 
-		fontVBO = GL46.glGenBuffers();
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, fontVBO);
-		GL46.glBufferData(GL46.GL_ARRAY_BUFFER, 1024 * 1024, GL46.GL_DYNAMIC_DRAW);
+		fontVBO = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, fontVBO);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 1024 * 1024, GL15.GL_DYNAMIC_DRAW);
 
-		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, Float.BYTES * 9, 0);
-		GL46.glEnableVertexAttribArray(0);
-		GL46.glVertexAttribPointer(1, 4, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
-		GL46.glEnableVertexAttribArray(1);
-		GL46.glVertexAttribPointer(2, 2, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
-		GL46.glEnableVertexAttribArray(2);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, Float.BYTES * 9, 0);
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
+		GL20.glEnableVertexAttribArray(2);
 
 		SceneManager manager = new SceneManager(new ExampleScene().scene);
 
@@ -163,34 +167,34 @@ public class Application{
 
 		manager.currentScene.Start();
 
-		GL46.glPatchParameteri(GL46.GL_PATCH_VERTICES, 3);
-		GL46.glDisable(GL46.GL_DITHER);
-		GL46.glDisable(GL46.GL_POINT_SMOOTH);
-		GL46.glDisable(GL46.GL_LINE_SMOOTH);
-		GL46.glDisable(GL46.GL_POLYGON_SMOOTH);
-		GL46.glHint(GL46.GL_POINT_SMOOTH, GL46.GL_DONT_CARE);
-		GL46.glHint(GL46.GL_LINE_SMOOTH, GL46.GL_DONT_CARE);
-		GL46.glHint(GL46.GL_POLYGON_SMOOTH_HINT, GL46.GL_DONT_CARE);
+		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 3);
+		GL11.glDisable(GL11.GL_DITHER);
+		GL11.glDisable(GL11.GL_POINT_SMOOTH);
+		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+		GL11.glHint(GL11.GL_POINT_SMOOTH, GL11.GL_DONT_CARE);
+		GL11.glHint(GL11.GL_LINE_SMOOTH, GL11.GL_DONT_CARE);
+		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
 
 		Vector2f lightDir = new Vector2f(90, 0);
 
 		if (wireframe){
-			GL46.glPolygonMode(GL46.GL_FRONT_AND_BACK, GL46.GL_LINE);
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
 
 		while (!GLFW.glfwWindowShouldClose(window)){
 			time.update();
 
-			GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, FBO);
-			GL46.glEnable(GL46.GL_DEPTH_TEST);
+			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-			GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
+			GL11.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 			GLFW.glfwGetFramebufferSize(window, w, h);
 			width = w.get(0);
 			height = h.get(0);
-			projection = new Matrix4f().perspective(70.0f, ((float)w.get(0) / resDivisor) / ((float)h.get(0) / resDivisor), 0.1f, 50.0f);
+			projection = new Matrix4f().perspective(70.0f, (w.get(0) / resDivisor) / (h.get(0) / resDivisor), 0.1f, 50.0f);
 			mainShader.use();
 			mainShader.setMat4("projection", projection);
 			mainShader.setVec2("targetResolution", (int)(w.get(0) / resDivisor) / 2, (int)(h.get(0) / resDivisor) / 2);
@@ -201,22 +205,22 @@ public class Application{
 			mainShader.setVec3("ambientColor", new Vector3f(0.2f, 0.2f, 0.2f));
 			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 
-			GL46.glViewport(0, 0, (int)(w.get(0) / resDivisor), (int)(h.get(0) / resDivisor));
+			GL11.glViewport(0, 0, (int)(w.get(0) / resDivisor), (int)(h.get(0) / resDivisor));
 			manager.currentScene.Update();
 
-			GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
-			GL46.glDisable(GL46.GL_DEPTH_TEST);
+			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-			GL46.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			GL46.glClear(GL46.GL_COLOR_BUFFER_BIT);
+			GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 			post.use();
-			GL46.glViewport(0, 0, w.get(0), h.get(0));
-			GL46.glBindVertexArray(quadVAO);
-			GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, quadVBO);
-			GL46.glBufferData(GL46.GL_ARRAY_BUFFER, quadVertices, GL46.GL_STATIC_DRAW);
-			GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
-			GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, 6);
+			GL11.glViewport(0, 0, w.get(0), h.get(0));
+			GL30.glBindVertexArray(quadVAO);
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, quadVertices, GL15.GL_STATIC_DRAW);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FBOtex);
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
@@ -226,11 +230,11 @@ public class Application{
 
 		sound.destroy();
 
-		GL46.glDeleteVertexArrays(VAO);
-		GL46.glDeleteBuffers(VBO);
-		GL46.glDeleteBuffers(EBO);
-		GL46.glDeleteFramebuffers(FBO);
-		GL46.glDeleteRenderbuffers(RBO);
+		GL30.glDeleteVertexArrays(VAO);
+		GL15.glDeleteBuffers(VBO);
+		GL15.glDeleteBuffers(EBO);
+		GL30.glDeleteFramebuffers(FBO);
+		GL30.glDeleteRenderbuffers(RBO);
 
 		GLFW.glfwTerminate();
 		return;
@@ -240,22 +244,22 @@ public class Application{
 		return new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
-				GL46.glViewport(0, 0, (int)(width / resDivisor), (int)(height / resDivisor));
+				GL11.glViewport(0, 0, (int)(width / resDivisor), (int)(height / resDivisor));
 
 				// Resize FBO Texture
-				GL46.glBindTexture(GL46.GL_TEXTURE_2D, FBOtex);
-				GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGB16F, (int)(width / resDivisor), (int)(height / resDivisor), 0, GL46.GL_RGB, GL46.GL_FLOAT, NULL);
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FBOtex);
+				GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGB16F, (int)(width / resDivisor), (int)(height / resDivisor), 0, GL11.GL_RGB, GL11.GL_FLOAT, NULL);
 
 				// Resize Renderbuffer Storage
-				GL46.glBindRenderbuffer(GL46.GL_RENDERBUFFER, RBO);
-				GL46.glRenderbufferStorage(GL46.GL_RENDERBUFFER, GL46.GL_DEPTH24_STENCIL8, (int)(width / resDivisor), (int)(height / resDivisor));
+				GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, RBO);
+				GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH24_STENCIL8, (int)(width / resDivisor), (int)(height / resDivisor));
 
 				// Verify FBO is complete
-				GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, FBO);
-				if (GL46.glCheckFramebufferStatus(GL46.GL_FRAMEBUFFER) != GL46.GL_FRAMEBUFFER_COMPLETE){
+				GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
+				if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE){
 					System.err.println("Framebuffer is not complete after resize!");
 				}
-				GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
+				GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 			}
 		};
 

@@ -3,7 +3,7 @@ package dreampool.ui.parts;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL11;
 
 import dreampool.Application;
 import dreampool.core.Part;
@@ -26,8 +26,8 @@ public class Text extends Part{
 
 	@Override
 	public void Update(){
-		GL46.glEnable(GL46.GL_BLEND);
-		GL46.glBlendFunc(GL46.GL_SRC_ALPHA, GL46.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		font.renderText(text, new Vector3f(position, 0), color, size);
 	}
 }

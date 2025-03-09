@@ -10,7 +10,11 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
@@ -31,7 +35,7 @@ public class Font{
 	private STBTTPackedchar.Buffer chardata;
 	private STBTTAlignedQuad.Buffer alignedQuads;
 
-	private List<Float> vertices = new ArrayList<Float>();
+	private List<Float> vertices = new ArrayList<>();
 
 	public static BasicShader shader = new BasicShader("/shaders/text.vert", "/shaders/text.frag");
 	static int VAO;
@@ -57,17 +61,17 @@ public class Font{
 			alignedQuads.put(i, quad);
 		}
 
-		texture = GL46.glGenTextures();
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, texture);
+		texture = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 
-		GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, GL46.GL_R8, 512, 512, 0, GL46.GL_RED, GL46.GL_UNSIGNED_BYTE, bitmap);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_R8, 512, 512, 0, GL11.GL_RED, GL11.GL_UNSIGNED_BYTE, bitmap);
 
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MIN_FILTER, GL46.GL_LINEAR);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_MAG_FILTER, GL46.GL_LINEAR);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_WRAP_S, GL46.GL_REPEAT);
-		GL46.glTexParameteri(GL46.GL_TEXTURE_2D, GL46.GL_TEXTURE_WRAP_T, GL46.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, 0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
 		// Output debug atlas
 		// STBImageWrite.stbi_write_png("fontAtlas.png", 512, 512, 1, bitmap, 512);
@@ -122,11 +126,11 @@ public class Font{
 
 		int vertexCount = vertices.size() / 9;
 
-		GL46.glDisable(GL46.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		shader.use();
 
-		GL46.glActiveTexture(GL46.GL_TEXTURE0);
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, texture);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 
 		shader.setInt("uFontAtlasTexture", 0);
 		if (altProj == null){
@@ -135,34 +139,35 @@ public class Font{
 			shader.setMat4("projection", altProj);
 		}
 
-		GL46.glBindVertexArray(VAO);
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, VBO);
+		GL30.glBindVertexArray(VAO);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
 		float[] verticeArray = new float[vertices.size()];
-		for (int i = 0; i < vertices.size(); i++)
-			verticeArray[i] = vertices.get(i);
+		for (int i = 0; i < vertices.size(); i++) {
+		    verticeArray[i] = vertices.get(i);
+		}
 		FloatBuffer fb = BufferUtils.createFloatBuffer(verticeArray.length);
 		fb.put(verticeArray).flip();
-		GL46.glBufferSubData(GL46.GL_ARRAY_BUFFER, 0, fb);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, fb);
 
-		GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, vertexCount);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
 	}
 
 	static void setupVAOandVBO(){
-		VAO = GL46.glGenVertexArrays();
-		GL46.glBindVertexArray(VAO);
+		VAO = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(VAO);
 
-		VBO = GL46.glGenBuffers();
-		GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, VBO);
-		GL46.glBufferData(GL46.GL_ARRAY_BUFFER, 1024 * 1024, GL46.GL_DYNAMIC_DRAW);
+		VBO = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 1024 * 1024, GL15.GL_DYNAMIC_DRAW);
 
-		GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, Float.BYTES * 9, 0);
-		GL46.glEnableVertexAttribArray(0);
-		GL46.glVertexAttribPointer(1, 4, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
-		GL46.glEnableVertexAttribArray(1);
-		GL46.glVertexAttribPointer(2, 2, GL46.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
-		GL46.glEnableVertexAttribArray(2);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, Float.BYTES * 9, 0);
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
+		GL20.glEnableVertexAttribArray(2);
 
-		GL46.glBindVertexArray(0);
+		GL30.glBindVertexArray(0);
 	}
 
 	static float[] verticesTest = {

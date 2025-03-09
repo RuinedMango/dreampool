@@ -19,7 +19,7 @@ import java.util.Objects;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC11;
+import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.EXTThreadLocalContext;
 import org.lwjgl.openal.SOFTHRTF;
@@ -64,7 +64,7 @@ public class AudioDevice{
 			}
 		}
 
-		ID = ALC11.alcOpenDevice((ByteBuffer)null);
+		ID = ALC10.alcOpenDevice((ByteBuffer)null);
 		if (ID == NULL){
 			throw new IllegalStateException("Failed to open the audio device");
 		}
@@ -75,12 +75,12 @@ public class AudioDevice{
 			throw new IllegalStateException("Error: ALC_SOFT_HRTF not supported");
 		}
 
-		context = ALC11.alcCreateContext(ID, (IntBuffer)null);
+		context = ALC10.alcCreateContext(ID, (IntBuffer)null);
 
 		EXTThreadLocalContext.alcSetThreadContext(context);
 		AL.createCapabilities(deviceCaps);
 
-		int num_hrtf = ALC11.alcGetInteger(ID, SOFTHRTF.ALC_NUM_HRTF_SPECIFIERS_SOFT);
+		int num_hrtf = ALC10.alcGetInteger(ID, SOFTHRTF.ALC_NUM_HRTF_SPECIFIERS_SOFT);
 		if (num_hrtf == 0){
 			System.out.println("No HRTFs found");
 		}else{
@@ -96,7 +96,7 @@ public class AudioDevice{
 				}
 			}
 
-			IntBuffer attr = BufferUtils.createIntBuffer(10).put(SOFTHRTF.ALC_HRTF_SOFT).put(ALC11.ALC_TRUE);
+			IntBuffer attr = BufferUtils.createIntBuffer(10).put(SOFTHRTF.ALC_HRTF_SOFT).put(ALC10.ALC_TRUE);
 
 			if (index == -1){
 				if (HRTFName != null){
@@ -111,14 +111,14 @@ public class AudioDevice{
 			attr.flip();
 
 			if (!SOFTHRTF.alcResetDeviceSOFT(ID, attr)){
-				System.out.format("Failed to reset device: %s\n", ALC11.alcGetString(ID, ALC11.alcGetError(ID)));
+				System.out.format("Failed to reset device: %s\n", ALC10.alcGetString(ID, ALC10.alcGetError(ID)));
 			}
 
-			int hrtf_state = ALC11.alcGetInteger(ID, SOFTHRTF.ALC_HRTF_SOFT);
+			int hrtf_state = ALC10.alcGetInteger(ID, SOFTHRTF.ALC_HRTF_SOFT);
 			if (hrtf_state == 0){
 				System.out.format("HRTF not enabled!\n");
 			}else{
-				String name = ALC11.alcGetString(ID, SOFTHRTF.ALC_HRTF_SPECIFIER_SOFT);
+				String name = ALC10.alcGetString(ID, SOFTHRTF.ALC_HRTF_SPECIFIER_SOFT);
 				System.out.format("HRTF enabled, using %s\n", name);
 			}
 		}
@@ -126,7 +126,7 @@ public class AudioDevice{
 
 	public void destroy(){
 		EXTThreadLocalContext.alcSetThreadContext(NULL);
-		ALC11.alcDestroyContext(context);
-		ALC11.alcCloseDevice(ID);
+		ALC10.alcDestroyContext(context);
+		ALC10.alcCloseDevice(ID);
 	}
 }

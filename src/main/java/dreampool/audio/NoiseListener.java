@@ -2,7 +2,7 @@ package dreampool.audio;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL11;
+import org.lwjgl.openal.AL10;
 
 import dreampool.core.Part;
 import dreampool.render.camera.Camera;
@@ -32,7 +32,7 @@ public class NoiseListener extends Part{
 	}
 
 	public void setPosition(Vector3f position){
-		AL11.alListener3f(AL11.AL_POSITION, position.x, position.y, position.z);
+		AL10.alListener3f(AL10.AL_POSITION, position.x, position.y, position.z);
 	}
 
 	public void setOrientation(Vector3f at, Vector3f up){
@@ -43,6 +43,6 @@ public class NoiseListener extends Part{
 		data[3] = up.x;
 		data[4] = up.y;
 		data[5] = up.z;
-		AL11.alListenerfv(AL11.AL_ORIENTATION, data);
+		AL10.alListenerfv(AL10.AL_ORIENTATION, data);
 	}
 }

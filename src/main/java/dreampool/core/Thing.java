@@ -11,7 +11,7 @@ public class Thing{
 	public Transform transform = new Transform();
 	public String name = "nilli";
 	public UUID uid = UUID.randomUUID();
-	public List<Part> parts = new ArrayList<Part>();
+	public List<Part> parts = new ArrayList<>();
 
 	public Thing(String name){
 		this.name = name;
@@ -28,7 +28,7 @@ public class Thing{
 			if (!part.startedOnce){
 				part.startedOnce = true;
 				part.Start();
-				;
+
 			}
 		}
 	}

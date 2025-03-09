@@ -36,12 +36,12 @@ public class FileUtils{
 	}
 
 	public static void readObjMeshResource(String path, List<Float> vertices, List<Integer> indices) throws IOException{
-		List<Integer> vertexIndices = new ArrayList<Integer>();
-		List<Integer> uvIndices = new ArrayList<Integer>();
-		List<Integer> normalIndices = new ArrayList<Integer>();
-		List<Vector3f> temp_vertices = new ArrayList<Vector3f>();
-		List<Vector2f> temp_uvs = new ArrayList<Vector2f>();
-		List<Vector3f> temp_normals = new ArrayList<Vector3f>();
+		List<Integer> vertexIndices = new ArrayList<>();
+		List<Integer> uvIndices = new ArrayList<>();
+		List<Integer> normalIndices = new ArrayList<>();
+		List<Vector3f> temp_vertices = new ArrayList<>();
+		List<Vector2f> temp_uvs = new ArrayList<>();
+		List<Vector3f> temp_normals = new ArrayList<>();
 		InputStream modelFile = Class.class.getResourceAsStream(path);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(modelFile));
 		String line;
@@ -103,8 +103,9 @@ public class FileUtils{
 			byte[] buf = new byte[1024];
 			while (true){
 				int bytes = source.read(buf);
-				if (bytes == -1)
-					break;
+				if (bytes == -1) {
+				    break;
+				}
 				buffer.put(buf, 0, bytes);
 			}
 

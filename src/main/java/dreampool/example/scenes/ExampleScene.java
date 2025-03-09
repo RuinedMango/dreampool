@@ -29,14 +29,14 @@ public class ExampleScene{
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 
-		for (int i = 0; i < 200; i++){
+		for (int i = 0; i < 400; i++){
 			Thing ball = new Thing("ball" + i);
-			ball.addPart(new Mesh("/models/Sphere.obj", (int)i % 2 >= 1 ? false : true));
+			ball.addPart(new Mesh("/models/Sphere.obj", i % 2 >= 1 ? false : true));
 			ball.addPart(new AABBCollider());
 			ball.addPart(new Texture("/images/white.png"));
 			ball.addPart(new Texture("/images/white.png", 1));
 			ball.addPart(new Rotator());
-			ball.transform.position = new Vector3f(0, 1, i);
+			ball.transform.position = new Vector3f(-i, 1, 0);
 			scene.addThing(ball);
 		}
 

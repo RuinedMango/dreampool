@@ -46,8 +46,9 @@ public class AABBCollider extends Part implements Bound{
 		int vertexCount = vertices.size() / 8;
 		int positionOffset = 0;
 		int vertexStride = 8;
-		if (vertexCount == 0)
-			throw new IllegalArgumentException("No vertices");
+		if (vertexCount == 0) {
+		    throw new IllegalArgumentException("No vertices");
+		}
 
 		// Initialize with first vertex's position
 		int firstPosIndex = positionOffset;
@@ -67,18 +68,24 @@ public class AABBCollider extends Part implements Bound{
 			float z = vertices.get(posIndex + 2);
 
 			// Update bounds
-			if (x < minX)
-				minX = x;
-			if (x > maxX)
-				maxX = x;
-			if (y < minY)
-				minY = y;
-			if (y > maxY)
-				maxY = y;
-			if (z < minZ)
-				minZ = z;
-			if (z > maxZ)
-				maxZ = z;
+			if (x < minX) {
+			    minX = x;
+			}
+			if (x > maxX) {
+			    maxX = x;
+			}
+			if (y < minY) {
+			    minY = y;
+			}
+			if (y > maxY) {
+			    maxY = y;
+			}
+			if (z < minZ) {
+			    minZ = z;
+			}
+			if (z > maxZ) {
+			    maxZ = z;
+			}
 		}
 
 		Vector3f[] corners = {new Vector3f(minX, minY, minZ), new Vector3f(maxX, minY, minZ), new Vector3f(minX, maxY, minZ), new Vector3f(maxX, maxY, minZ), new Vector3f(minX, minY, maxZ), new Vector3f(maxX, minY, maxZ), new Vector3f(minX, maxY, maxZ), new Vector3f(maxX, maxY, maxZ)};

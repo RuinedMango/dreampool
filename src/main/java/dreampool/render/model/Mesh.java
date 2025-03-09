@@ -9,7 +9,10 @@ import java.util.Map;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 
 import dreampool.Application;
 import dreampool.IO.FileUtils;
@@ -19,8 +22,8 @@ public class Mesh extends Part{
 	public boolean inFrustum;
 	private String path;
 	private boolean flat = true;
-	public List<Float> vertices = new ArrayList<Float>();
-	private List<Integer> indices = new ArrayList<Integer>();
+	public List<Float> vertices = new ArrayList<>();
+	private List<Integer> indices = new ArrayList<>();
 
 	float[] vertexArray;
 	float[] indiceArray;
@@ -79,29 +82,31 @@ public class Mesh extends Part{
 	@Override
 	public void Start(){
 		vertexArray = new float[vertices.size()];
-		for (int i = 0; i < vertices.size(); i++)
-			vertexArray[i] = vertices.get(i);
+		for (int i = 0; i < vertices.size(); i++) {
+		    vertexArray[i] = vertices.get(i);
+		}
 		indiceArray = new float[indices.size()];
-		for (int i = 0; i < indices.size(); i++)
-			indiceArray[i] = indices.get(i);
+		for (int i = 0; i < indices.size(); i++) {
+		    indiceArray[i] = indices.get(i);
+		}
 	}
 
 	@Override
 	public void Update(){
 		if (inFrustum){
-			GL46.glEnable(GL46.GL_DEPTH_TEST);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			Application.mainShader.use();
-			GL46.glBindVertexArray(Application.VAO);
-			GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, Application.VBO);
-			GL46.glBufferData(GL46.GL_ARRAY_BUFFER, vertexArray, GL46.GL_STATIC_DRAW);
-			GL46.glBufferData(GL46.GL_ELEMENT_ARRAY_BUFFER, indiceArray, GL46.GL_STATIC_DRAW);
+			GL30.glBindVertexArray(Application.VAO);
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, Application.VBO);
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexArray, GL15.GL_STATIC_DRAW);
+			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indiceArray, GL15.GL_STATIC_DRAW);
 			Matrix4f model = new Matrix4f();
 			model.translate(transform.position);
 			model.rotate(new Quaternionf().rotationXYZ((float)Math.toRadians(transform.rotation.x), (float)Math.toRadians(transform.rotation.y), (float)Math.toRadians(transform.rotation.z)));
 			model.scale(transform.size);
 			Application.mainShader.setMat4("model", model);
 			Application.mainShader.setBool("flatlight", flat);
-			GL46.glDrawArrays(GL46.GL_PATCHES, 0, vertices.size());
+			GL11.glDrawArrays(GL40.GL_PATCHES, 0, vertices.size());
 			// GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT,
 			// 0);
 		}
