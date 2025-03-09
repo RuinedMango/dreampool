@@ -13,30 +13,30 @@ public class Camera extends Part{
 	public Vector3f front = new Vector3f(0.0f, 0.0f, -1.0f);
 	public Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 	public Vector3f right = new Vector3f();
-	
-	public Camera() {
-		if(Singleton == null) {
+
+	public Camera(){
+		if (Singleton == null){
 			Singleton = this;
-		}else {
+		}else{
 			System.out.println("Camera already exists");
 		}
 	}
-	
+
 	@Override
-	public void Start() {
+	public void Start(){
 		this.front = transform.rotation.normalize();
 	}
-	
+
 	@Override
-	public void Update() {
+	public void Update(){
 		Vector3f frontPos = new Vector3f();
 		Vector3f cameraPos = transform.position;
 		cameraPos.add(front, frontPos);
 		matrix = new Matrix4f().lookAt(cameraPos, frontPos, up);
 		Application.mainShader.setMat4("view", matrix);
-		
+
 		Matrix4f viewProjMatrix = new Matrix4f(Application.projection).mul(matrix);
-		
+
 		frustum.update(viewProjMatrix);
 	}
 }
