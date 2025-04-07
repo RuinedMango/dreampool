@@ -18,7 +18,6 @@ import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryStack;
 
 import dreampool.IO.DeviceManager;
-import dreampool.IO.assets.AssetLoader;
 import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
@@ -74,7 +73,7 @@ public class Application {
 	GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
 	AudioDevice sound = new AudioDevice();
-	AssetLoader assetLoader = new AssetLoader();
+	// AssetLoader assetLoader = new AssetLoader();
 
 	VAO = GL30.glGenVertexArrays();
 	GL30.glBindVertexArray(VAO);
@@ -232,7 +231,7 @@ public class Application {
 	}
 
 	sound.destroy();
-	assetLoader.shutdown();
+	// assetLoader.shutdown();
 
 	GL30.glDeleteVertexArrays(VAO);
 	GL15.glDeleteBuffers(VBO);
