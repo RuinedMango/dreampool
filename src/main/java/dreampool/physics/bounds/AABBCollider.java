@@ -1,4 +1,4 @@
-package dreampool.physics;
+package dreampool.physics.bounds;
 
 import java.util.List;
 
@@ -10,11 +10,13 @@ import org.joml.Vector4f;
 import dreampool.core.Part;
 import dreampool.render.camera.Camera;
 import dreampool.render.model.Mesh;
+import dreampool.render.texture.Texture;
 
 public class AABBCollider extends Part implements Bound {
     Vector3f max;
     Vector3f min;
     private Mesh mesh;
+    private Texture tex;
 
     @Override
     public boolean isOnFrustum() {
@@ -34,6 +36,7 @@ public class AABBCollider extends Part implements Bound {
     @Override
     public void Start() {
 	mesh = (Mesh) thing.getPart("Mesh");
+	tex = (Texture) thing.getPart("Texture");
 
 	Matrix4f model = new Matrix4f();
 	model.scale(transform.size);
@@ -116,7 +119,9 @@ public class AABBCollider extends Part implements Bound {
 
     @Override
     public void Update() {
-	mesh.inFrustum = isOnFrustum();
+	boolean onFrus = isOnFrustum();
+	mesh.inFrustum = onFrus;
+	tex.inFrustum = onFrus;
 
     }
 }

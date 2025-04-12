@@ -1,4 +1,4 @@
-package dreampool.physics;
+package dreampool.physics.bounds;
 
 import java.util.List;
 
