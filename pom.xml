@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ruinedmango</groupId>
   <artifactId>dreampool</artifactId>
@@ -10,7 +10,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
 	<lwjgl.version>3.4.0-SNAPSHOT</lwjgl.version>
-	<joml.version>1.10.7</joml.version>
+	<joml.version>1.10.8</joml.version>
 </properties>
 
 <profiles>
@@ -116,6 +116,13 @@
 		<properties>
 			<lwjgl.natives>natives-macos</lwjgl.natives>
 		</properties>
+		<dependencies>
+			<dependency>
+				<groupId>org.lwjgl</groupId>
+				<artifactId>lwjgl-vulkan</artifactId>
+				<classifier>natives-macos</classifier>
+			</dependency>
+		</dependencies>
 	</profile>
 	<profile>
 		<id>lwjgl-natives-macos-aarch64</id>
@@ -128,6 +135,13 @@
 		<properties>
 			<lwjgl.natives>natives-macos-arm64</lwjgl.natives>
 		</properties>
+		<dependencies>
+			<dependency>
+				<groupId>org.lwjgl</groupId>
+				<artifactId>lwjgl-vulkan</artifactId>
+				<classifier>natives-macos-arm64</classifier>
+			</dependency>
+		</dependencies>
 	</profile>
 	<profile>
 		<id>lwjgl-natives-windows-amd64</id>
@@ -169,8 +183,8 @@
 
 <repositories>
 	<repository>
-		<id>sonatype-snapshots</id>
-		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		<id>central-snapshots</id>
+		<url>https://central.sonatype.com/repository/maven-snapshots</url>
 		<releases><enabled>false</enabled></releases>
 		<snapshots><enabled>true</enabled></snapshots>
 	</repository>
@@ -207,11 +221,19 @@
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
+		<artifactId>lwjgl-openxr</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.lwjgl</groupId>
+		<artifactId>lwjgl-shaderc</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-stb</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-openxr</artifactId>
+		<artifactId>lwjgl-vulkan</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
@@ -235,12 +257,17 @@
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-stb</artifactId>
+		<artifactId>lwjgl-openxr</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
-		<dependency>
+	<dependency>
 		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-openxr</artifactId>
+		<artifactId>lwjgl-shaderc</artifactId>
+		<classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+		<groupId>org.lwjgl</groupId>
+		<artifactId>lwjgl-stb</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
 		<dependency>
@@ -249,7 +276,6 @@
 		<version>${joml.version}</version>
 	</dependency>
 </dependencies>
-
 <build>
 
 <plugins>
