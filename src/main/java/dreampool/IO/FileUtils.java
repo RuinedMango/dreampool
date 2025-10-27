@@ -36,6 +36,7 @@ public class FileUtils {
 		}
 	}
 
+	// TODO make this support more stuff and make it less error prone
 	public static Mesh.CacheEntry readObjMeshResource(String path) throws IOException {
 		List<Float> vertices = new ArrayList<>();
 		List<Integer> indices = new ArrayList<>();
@@ -88,14 +89,12 @@ public class FileUtils {
 		for (int i = 0; i < vertexIndices.size(); i++) {
 			indices.add(i);
 
-			// --- Vertex positions ---
 			int vertexIndex = vertexIndices.get(i);
 			Vector3f v = temp_vertices.get(vertexIndex - 1);
 			vertices.add(v.x);
 			vertices.add(v.y);
 			vertices.add(v.z);
 
-			// --- Texture coordinates ---
 			Integer uvIndex = uvIndices.get(i);
 			if (uvIndex != null && uvIndex > 0 && uvIndex <= temp_uvs.size()) {
 				Vector2f uv = temp_uvs.get(uvIndex - 1);
@@ -107,7 +106,6 @@ public class FileUtils {
 				vertices.add(0.0f);
 			}
 
-			// --- Normals ---
 			Integer normalIndex = normalIndices.get(i);
 			if (normalIndex != null && normalIndex > 0 && normalIndex <= temp_normals.size()) {
 				Vector3f n = temp_normals.get(normalIndex - 1);
@@ -130,7 +128,6 @@ public class FileUtils {
 		for (int i = 0; i < indices.size(); i++)
 			indicesList[i] = indices.get(i);
 
-		// Return arrays
 		return new Mesh.CacheEntry(verticesList, indicesList);
 	}
 
@@ -154,7 +151,6 @@ public class FileUtils {
 			buffer.flip();
 			return buffer;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

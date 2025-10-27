@@ -38,6 +38,7 @@ public class PlayerController extends Part {
 	@Override
 	public void Update() {
 		processMovement(DeviceManager.Singleton.window);
+		// TODO eventually do something cool
 		fireRayFromCamera();
 	}
 
@@ -69,6 +70,7 @@ public class PlayerController extends Part {
 		}
 	}
 
+	// TODO implement BHV over this stupid shit
 	private void fireRayFromCamera() {
 		Vector3f rayOrigin = new Vector3f(transform.position);
 		Vector3f rayDir = new Vector3f(cam.front).normalize();

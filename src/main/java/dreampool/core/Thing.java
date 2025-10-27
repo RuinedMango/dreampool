@@ -8,6 +8,7 @@ import dreampool.core.scene.Scene;
 import dreampool.core.transform.Transform;
 
 public class Thing {
+	// TODO fix runtime instantiation
 	public Scene scene;
 	public boolean startedOnce = false;
 	public Transform transform = new Transform();
@@ -15,6 +16,8 @@ public class Thing {
 	public UUID uid = UUID.randomUUID();
 	public List<Part> parts = new ArrayList<>();
 	public List<Part> toAdd = new ArrayList<>();
+	// TODO actually implement removing
+	public List<Part> toRemove = new ArrayList<>();
 
 	public Thing(String name) {
 		this.name = name;
@@ -48,9 +51,10 @@ public class Thing {
 	public void addPart(Part part) {
 		part.thing = this;
 		part.transform = this.transform;
-		toAdd.add(0, part);
+		toAdd.add(part);
 	}
 
+	// TODO figure out how to remove suppress warning.
 	@SuppressWarnings("unchecked")
 	public <T extends Part> T getPart(String type) {
 		for (Part part : parts) {
@@ -61,6 +65,7 @@ public class Thing {
 		return null;
 	}
 
+	// TODO here too
 	@SuppressWarnings("unchecked")
 	public <T extends Part> T getPartExtendsOrImplements(String extension) {
 		for (Part part : parts) {

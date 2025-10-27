@@ -53,10 +53,10 @@ public class SphereCollider extends Part implements Bound, Collider {
 		updateWorldSpace();
 	}
 
+	// TODO fix for bunny model (strangely large)
 	public void computeSphere(float[] vertices) {
 		final int stride = 8; // x, y, z, nx, ny, nz, u, v
 
-		// --- Step 1: Find min/max X positions ---
 		int minXIndex = 0;
 		int maxXIndex = 0;
 		float minX = vertices[0];
@@ -77,12 +77,10 @@ public class SphereCollider extends Part implements Bound, Collider {
 		float[] minXPos = { vertices[minXIndex], vertices[minXIndex + 1], vertices[minXIndex + 2] };
 		float[] maxXPos = { vertices[maxXIndex], vertices[maxXIndex + 1], vertices[maxXIndex + 2] };
 
-		// --- Step 2: Initial model-space sphere ---
 		centerLocal = new Vector3f((minXPos[0] + maxXPos[0]) / 2f, (minXPos[1] + maxXPos[1]) / 2f,
 				(minXPos[2] + maxXPos[2]) / 2f);
 		radiusLocal = distance(maxXPos, new float[] { centerLocal.x, centerLocal.y, centerLocal.z });
 
-		// --- Step 3: Expand to include all vertices ---
 		for (int i = 0; i < vertices.length; i += stride) {
 			float vx = vertices[i];
 			float vy = vertices[i + 1];
@@ -141,6 +139,7 @@ public class SphereCollider extends Part implements Bound, Collider {
 		return thing;
 	}
 
+	// TODO implement other intersection types
 	@Override
 	public float intersectRay(Vector3f origin, Vector3f dir) {
 		if (!active) {

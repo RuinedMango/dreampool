@@ -26,6 +26,7 @@ import dreampool.render.PostShader;
 import dreampool.render.Shader;
 
 public class Application {
+	// TODO fix this whole god awful class
 	public static Matrix4f projection;
 	public static int width;
 	public static int height;

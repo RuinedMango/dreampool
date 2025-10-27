@@ -8,6 +8,7 @@ import dreampool.physics.bounds.Collider;
 import dreampool.render.fog.Fog;
 
 public class Scene {
+	// TODO fix runtime instantiation
 	public Fog fog;
 	public String name;
 	public List<Thing> things = new ArrayList<>();
@@ -23,6 +24,7 @@ public class Scene {
 		toAdd.add(thing);
 	}
 
+	// TODO actually implement removing
 	public void removeThing(Thing thing) {
 		toRemove.add(thing);
 	}

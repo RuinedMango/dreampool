@@ -6,7 +6,8 @@ import org.joml.Vector3f;
 import dreampool.Application;
 import dreampool.core.Part;
 
-public class Camera extends Part{
+// TODO add other views and advanced camera stuff like that
+public class Camera extends Part {
 	public static Camera Singleton;
 	public Frustum frustum = new Frustum();
 	public Matrix4f matrix = new Matrix4f();
@@ -14,21 +15,21 @@ public class Camera extends Part{
 	public Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 	public Vector3f right = new Vector3f();
 
-	public Camera(){
-		if (Singleton == null){
+	public Camera() {
+		if (Singleton == null) {
 			Singleton = this;
-		}else{
+		} else {
 			System.out.println("Camera already exists");
 		}
 	}
 
 	@Override
-	public void Start(){
+	public void Start() {
 		this.front = transform.rotation.normalize();
 	}
 
 	@Override
-	public void Update(){
+	public void Update() {
 		Vector3f frontPos = new Vector3f();
 		Vector3f cameraPos = transform.position;
 		cameraPos.add(front, frontPos);

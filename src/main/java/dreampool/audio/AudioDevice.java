@@ -32,25 +32,22 @@ public class AudioDevice {
 	public String HRTFName = "Dreampool";
 
 	public AudioDevice() {
+		// TODO add other OS support
 		File linuxConf = new File(System.getenv("HOME") + "/.config/alsoft.conf");
 		if (!linuxConf.exists()) {
 			try {
 				linuxConf.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try (BufferedWriter writer = new BufferedWriter(
 					new OutputStreamWriter(new FileOutputStream(linuxConf), "utf-8"))) {
 				writer.write(FileUtils.readTextResource("/audio/config/alsoftrc.sample"));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -61,7 +58,6 @@ public class AudioDevice {
 			try (InputStream is = AudioDevice.class.getResourceAsStream("/audio/hrtf/" + HRTFName + ".mhr")) {
 				Files.copy(is, Paths.get(linuxHRTF.getAbsolutePath()));
 			} catch (IOException e) {
-				// An error occurred copying the resource
 			}
 		}
 

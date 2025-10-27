@@ -15,6 +15,7 @@ import dreampool.Application;
 import dreampool.IO.FileUtils;
 import dreampool.core.Part;
 
+// TODO implement skeletal animation and fix instancing and possibly add texture atlases.
 public class Mesh extends Part {
 	public boolean isLoaded = false;
 	public boolean inFrustum;
@@ -57,7 +58,6 @@ public class Mesh extends Part {
 		try {
 			meshCache.put(path, FileUtils.readObjMeshResource(path));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		synchronized (meshCache) {

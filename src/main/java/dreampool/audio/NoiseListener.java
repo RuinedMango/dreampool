@@ -7,20 +7,21 @@ import org.lwjgl.openal.AL10;
 import dreampool.core.Part;
 import dreampool.render.camera.Camera;
 
-public class NoiseListener extends Part{
+public class NoiseListener extends Part {
+	// TODO abstract away from camera
 	private Camera cam;
 
-	public NoiseListener(){
-
+	// Funny class
+	public NoiseListener() {
 	}
 
 	@Override
-	public void Start(){
-		cam = (Camera)thing.getPart("Camera");
+	public void Start() {
+		cam = (Camera) thing.getPart("Camera");
 	}
 
 	@Override
-	public void Update(){
+	public void Update() {
 		setPosition(transform.position);
 
 		Matrix4f camMatrix = cam.matrix;
@@ -31,11 +32,11 @@ public class NoiseListener extends Part{
 		setOrientation(at, up);
 	}
 
-	public void setPosition(Vector3f position){
+	public void setPosition(Vector3f position) {
 		AL10.alListener3f(AL10.AL_POSITION, position.x, position.y, position.z);
 	}
 
-	public void setOrientation(Vector3f at, Vector3f up){
+	public void setOrientation(Vector3f at, Vector3f up) {
 		float[] data = new float[6];
 		data[0] = at.x;
 		data[1] = at.y;

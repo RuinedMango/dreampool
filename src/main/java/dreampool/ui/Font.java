@@ -93,6 +93,7 @@ public class Font {
 				if (ch == ' ') {
 					localPos.x += 10 * scaleFactor;
 				} else {
+					// TODO understand math (thugged from example)
 					STBTTPackedchar packedChar = chardata.get(ch - 32);
 					STBTTAlignedQuad alignedQuad = alignedQuads.get(ch - 32);
 
@@ -179,12 +180,4 @@ public class Font {
 
 		GL30.glBindVertexArray(0);
 	}
-
-	static float[] verticesTest = {
-			// x, y, depth (z), r, g, b, a, texX, texY
-			100.0f, 100.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Vertex 1
-			200.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, // Vertex 2
-			200.0f, 200.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Vertex 3
-			100.0f, 200.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f // Vertex 4
-	};
 }

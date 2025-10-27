@@ -45,12 +45,11 @@ public class AABBCollider extends Part implements Bound, Collider {
 		mesh = (Mesh) thing.getPart("Mesh");
 		tex = (Texture) thing.getPart("Texture");
 
-		float[] vertices = mesh.vertexArray; // ✅ Use raw float array now
+		float[] vertices = mesh.vertexArray;
 		if (vertices == null || vertices.length == 0) {
 			throw new IllegalArgumentException("No vertices found in mesh: " + mesh);
 		}
 
-		// Compute bounds in local space
 		final int vertexStride = 8; // (x, y, z, u, v, nx, ny, nz)
 		int vertexCount = vertices.length / vertexStride;
 
@@ -91,7 +90,6 @@ public class AABBCollider extends Part implements Bound, Collider {
 						(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)))
 				.scale(transform.size);
 
-		// Compute 8 corners in world space
 		Vector3f[] corners = { new Vector3f(min.x, min.y, min.z), new Vector3f(max.x, min.y, min.z),
 				new Vector3f(min.x, max.y, min.z), new Vector3f(max.x, max.y, min.z), new Vector3f(min.x, min.y, max.z),
 				new Vector3f(max.x, min.y, max.z), new Vector3f(min.x, max.y, max.z),
@@ -133,6 +131,7 @@ public class AABBCollider extends Part implements Bound, Collider {
 		return max;
 	}
 
+	// TODO implement other intersection types
 	@Override
 	public float intersectRay(Vector3f origin, Vector3f dir) {
 		if (!active) {

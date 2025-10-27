@@ -6,6 +6,7 @@ import java.util.List;
 import dreampool.IO.FileUtils;
 import dreampool.IO.assets.AssetLoadingTask;
 
+// TODO deshitify whole asset loading system
 public class MeshLoadingTask implements AssetLoadingTask {
 	private String path;
 	private List<Float> vertices;

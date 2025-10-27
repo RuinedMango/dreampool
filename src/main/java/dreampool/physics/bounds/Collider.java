@@ -11,5 +11,6 @@ public interface Collider {
 
 	Thing getThing();
 
+	// TODO support other intersection types
 	float intersectRay(Vector3f origin, Vector3f dir);
 }

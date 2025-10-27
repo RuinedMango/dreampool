@@ -65,7 +65,6 @@ public class UIImage {
 
 			int[] order = { 0, 1, 2, 0, 2, 3 };
 
-			// Define quad corners in screen space
 			Vector3f topLeft = new Vector3f(position.x, position.y + size.y, position.z);
 			Vector3f topRight = new Vector3f(position.x + size.x, position.y + size.y, position.z);
 			Vector3f bottomLeft = new Vector3f(position.x, position.y, position.z);
