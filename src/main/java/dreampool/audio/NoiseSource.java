@@ -31,7 +31,6 @@ public class NoiseSource extends Part {
 
 	@Override
 	public void Start() {
-		// Why is relative checked here?
 		if (relative) {
 			AL10.alSource3f(ID, AL10.AL_POSITION, transform.position.x, transform.position.y, transform.position.z);
 		}
@@ -39,7 +38,6 @@ public class NoiseSource extends Part {
 
 	@Override
 	public void Update() {
-		// Here aswell?
 		if (relative) {
 			AL10.alSource3f(ID, AL10.AL_POSITION, transform.position.x, transform.position.y, transform.position.z);
 		}
