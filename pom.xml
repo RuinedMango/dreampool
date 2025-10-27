@@ -116,13 +116,6 @@
 		<properties>
 			<lwjgl.natives>natives-macos</lwjgl.natives>
 		</properties>
-		<dependencies>
-			<dependency>
-				<groupId>org.lwjgl</groupId>
-				<artifactId>lwjgl-vulkan</artifactId>
-				<classifier>natives-macos</classifier>
-			</dependency>
-		</dependencies>
 	</profile>
 	<profile>
 		<id>lwjgl-natives-macos-aarch64</id>
@@ -135,13 +128,6 @@
 		<properties>
 			<lwjgl.natives>natives-macos-arm64</lwjgl.natives>
 		</properties>
-		<dependencies>
-			<dependency>
-				<groupId>org.lwjgl</groupId>
-				<artifactId>lwjgl-vulkan</artifactId>
-				<classifier>natives-macos-arm64</classifier>
-			</dependency>
-		</dependencies>
 	</profile>
 	<profile>
 		<id>lwjgl-natives-windows-amd64</id>
@@ -203,6 +189,11 @@
 </dependencyManagement>
 
 <dependencies>
+<dependency>
+    <groupId>org.codehaus.janino</groupId>
+    <artifactId>janino</artifactId>
+    <version>3.1.12</version>
+</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl</artifactId>
@@ -218,14 +209,6 @@
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-opengl</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-openxr</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-shaderc</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
@@ -233,10 +216,6 @@
 	</dependency>
 	<dependency>
 		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-vulkan</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
@@ -253,16 +232,6 @@
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-opengl</artifactId>
-		<classifier>${lwjgl.natives}</classifier>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-openxr</artifactId>
-		<classifier>${lwjgl.natives}</classifier>
-	</dependency>
-	<dependency>
-		<groupId>org.lwjgl</groupId>
-		<artifactId>lwjgl-shaderc</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
 	<dependency>
