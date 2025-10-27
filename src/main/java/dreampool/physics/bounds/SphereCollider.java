@@ -14,8 +14,11 @@ import dreampool.render.model.Mesh;
 
 public class SphereCollider extends Part implements Bound, Collider {
 	public Mesh mesh;
-	private Vector3f centerWorld;
-	private float radiusWorld;
+	private Vector3f centerLocal = new Vector3f();
+	private float radiusLocal = 0.0f;
+
+	private Vector3f centerWorld = new Vector3f();
+	private float radiusWorld = 0.0f;
 
 	@Override
 	public boolean isOnFrustum() {
@@ -41,6 +44,7 @@ public class SphereCollider extends Part implements Bound, Collider {
 		}
 
 		computeSphere(vertices);
+		updateWorldSpace();
 	}
 
 	public void computeSphere(float[] vertices) {
@@ -68,10 +72,9 @@ public class SphereCollider extends Part implements Bound, Collider {
 		float[] maxXPos = { vertices[maxXIndex], vertices[maxXIndex + 1], vertices[maxXIndex + 2] };
 
 		// --- Step 2: Initial model-space sphere ---
-		Vector3f modelSpaceCenter = new Vector3f((minXPos[0] + maxXPos[0]) / 2f, (minXPos[1] + maxXPos[1]) / 2f,
+		centerLocal = new Vector3f((minXPos[0] + maxXPos[0]) / 2f, (minXPos[1] + maxXPos[1]) / 2f,
 				(minXPos[2] + maxXPos[2]) / 2f);
-		float modelSpaceRadius = distance(maxXPos,
-				new float[] { modelSpaceCenter.x, modelSpaceCenter.y, modelSpaceCenter.z });
+		radiusLocal = distance(maxXPos, new float[] { centerLocal.x, centerLocal.y, centerLocal.z });
 
 		// --- Step 3: Expand to include all vertices ---
 		for (int i = 0; i < vertices.length; i += stride) {
@@ -80,31 +83,28 @@ public class SphereCollider extends Part implements Bound, Collider {
 			float vz = vertices[i + 2];
 
 			Vector3f vertex = new Vector3f(vx, vy, vz);
-			float dist = modelSpaceCenter.distance(vertex);
-			if (dist > modelSpaceRadius) {
-				Vector3f dir = new Vector3f(vertex).sub(modelSpaceCenter);
-				float adjustment = (dist - modelSpaceRadius) / (2f * dist);
-				modelSpaceCenter.add(dir.mul(adjustment));
-				modelSpaceRadius = (modelSpaceRadius + dist) / 2f;
+			float dist = centerLocal.distance(vertex);
+			if (dist > radiusLocal) {
+				Vector3f dir = new Vector3f(vertex).sub(centerLocal);
+				float adjustment = (dist - radiusLocal) / (2f * dist);
+				centerLocal.add(dir.mul(adjustment));
+				radiusLocal = (radiusLocal + dist) / 2f;
 			}
 		}
+	}
 
-		// --- Step 4: Transform to world space ---
-		Matrix4f modelMatrix = computeModelMatrix();
-		Vector4f worldCenter = new Vector4f(modelSpaceCenter.x, modelSpaceCenter.y, modelSpaceCenter.z, 1.0f)
-				.mul(modelMatrix);
+	private void updateWorldSpace() {
+		Matrix4f model = new Matrix4f().translate(transform.position)
+				.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x),
+						(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)))
+				.scale(transform.size);
+		Matrix4f modelMatrix = model;
+		Vector4f worldCenter = new Vector4f(centerLocal.x, centerLocal.y, centerLocal.z, 1.0f).mul(modelMatrix);
 
 		this.centerWorld = new Vector3f(worldCenter.x, worldCenter.y, worldCenter.z);
 
 		float maxScale = Math.max(Math.max(transform.size.x, transform.size.y), transform.size.z);
-		this.radiusWorld = modelSpaceRadius * maxScale;
-	}
-
-	private Matrix4f computeModelMatrix() {
-		return new Matrix4f().translate(transform.position)
-				.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x),
-						(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)))
-				.scale(transform.size);
+		this.radiusWorld = radiusLocal * maxScale;
 	}
 
 	private float distance(float[] a, float[] b) {
@@ -116,6 +116,7 @@ public class SphereCollider extends Part implements Bound, Collider {
 
 	@Override
 	public void Update() {
+		updateWorldSpace();
 		mesh.inFrustum = isOnFrustum();
 	}
 

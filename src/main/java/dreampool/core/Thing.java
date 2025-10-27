@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import dreampool.core.scene.Scene;
 import dreampool.core.transform.Transform;
 
 public class Thing {
+	public Scene scene;
 	public boolean startedOnce = false;
 	public Transform transform = new Transform();
 	public String name = "nilli";
 	public UUID uid = UUID.randomUUID();
 	public List<Part> parts = new ArrayList<>();
+	public List<Part> toAdd = new ArrayList<>();
 
 	public Thing(String name) {
 		this.name = name;
@@ -21,9 +24,18 @@ public class Thing {
 		for (Part part : parts) {
 			part.Update();
 		}
+
+		if (!toAdd.isEmpty()) {
+			parts.addAll(toAdd);
+			toAdd.clear();
+		}
 	}
 
 	public void Start() {
+		if (!toAdd.isEmpty()) {
+			parts.addAll(toAdd);
+			toAdd.clear();
+		}
 		for (Part part : parts) {
 			if (!part.startedOnce) {
 				part.startedOnce = true;
@@ -34,9 +46,9 @@ public class Thing {
 	}
 
 	public void addPart(Part part) {
-		parts.add(0, part);
 		part.thing = this;
 		part.transform = this.transform;
+		toAdd.add(0, part);
 	}
 
 	@SuppressWarnings("unchecked")

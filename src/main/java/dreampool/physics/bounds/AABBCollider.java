@@ -14,10 +14,16 @@ import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 
 public class AABBCollider extends Part implements Bound, Collider {
-	private Vector3f max;
-	private Vector3f min;
+	private Vector3f max = new Vector3f();
+	private Vector3f min = new Vector3f();
 	private Mesh mesh;
 	private Texture tex;
+
+	public boolean active;
+
+	public AABBCollider(boolean active) {
+		this.active = active;
+	}
 
 	@Override
 	public boolean isOnFrustum() {
@@ -129,6 +135,9 @@ public class AABBCollider extends Part implements Bound, Collider {
 
 	@Override
 	public float intersectRay(Vector3f origin, Vector3f dir) {
+		if (!active) {
+			return 0;
+		}
 		float result = Intersectionf.intersectRayAab(origin.x, origin.y, origin.z, dir.x, dir.y, dir.z, min.x, min.y,
 				min.z, max.x, max.y, max.z, new Vector2f()) ? 1f : -1f;
 

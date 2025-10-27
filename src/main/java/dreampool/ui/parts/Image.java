@@ -18,7 +18,7 @@ public class Image extends Part {
 	public Image(UIImage texture, float x, float y, float width, float height, int r, int g, int b, float a) {
 		this.uiTexture = texture;
 		this.position = new Vector3f(x / Application.resDivisor, y / Application.resDivisor, 0);
-		this.size = new Vector2f(width, height);
+		this.size = new Vector2f(width * Application.resDivisor, height * Application.resDivisor);
 		this.color = new Vector4f((float) r / 255, (float) g / 255, (float) b / 255, a);
 	}
 

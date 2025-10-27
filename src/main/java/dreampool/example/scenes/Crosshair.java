@@ -14,7 +14,9 @@ public class Crosshair extends Part {
 	@Override
 	public void Update() {
 		// image.position.x += 1;
-		image.position.x = (Application.height / 2f) - (200f / 2f);
-		image.position.y = (Application.width / 2f) - (200f / 2f);
+		float height = (Application.height / 2) - (image.size.y / 2);
+		float width = (Application.width / 2) - (image.size.x / 2);
+		image.position.y = height;
+		image.position.x = width;
 	}
 }
