@@ -20,6 +20,12 @@ public class SphereCollider extends Part implements Bound, Collider {
 	private Vector3f centerWorld = new Vector3f();
 	private float radiusWorld = 0.0f;
 
+	public boolean active;
+
+	public SphereCollider(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public boolean isOnFrustum() {
 		Vector4f[] planes = Camera.Singleton.frustum.planes;
@@ -137,6 +143,9 @@ public class SphereCollider extends Part implements Bound, Collider {
 
 	@Override
 	public float intersectRay(Vector3f origin, Vector3f dir) {
+		if (!active) {
+			return 0;
+		}
 		Vector2f t = new Vector2f();
 		if (Intersectionf.intersectRaySphere(origin, dir, centerWorld, radiusWorld, t))
 			return t.x >= 0 ? t.x : t.y;
