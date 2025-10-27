@@ -93,14 +93,15 @@ public class Texture extends Part {
 
 	@Override
 	public void Start() {
-
 	}
 
 	@Override
 	public void Update() {
-		if (!inFrustum) {
+		if (inFrustum) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, ID);
+		} else {
+			return;
 		}
 	}
 

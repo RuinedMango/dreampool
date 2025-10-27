@@ -11,9 +11,11 @@ import dreampool.core.Part;
 import dreampool.core.Thing;
 import dreampool.render.camera.Camera;
 import dreampool.render.model.Mesh;
+import dreampool.render.texture.Texture;
 
 public class SphereCollider extends Part implements Bound, Collider {
 	public Mesh mesh;
+	public Texture texture;
 	private Vector3f centerLocal = new Vector3f();
 	private float radiusLocal = 0.0f;
 
@@ -28,19 +30,13 @@ public class SphereCollider extends Part implements Bound, Collider {
 
 	@Override
 	public boolean isOnFrustum() {
-		Vector4f[] planes = Camera.Singleton.frustum.planes;
-		for (Vector4f plane : planes) {
-			float distance = plane.x * centerWorld.x + plane.y * centerWorld.y + plane.z * centerWorld.z + plane.w;
-			if (distance < -radiusWorld) {
-				return false;
-			}
-		}
-		return true;
+		return Camera.Singleton.frustum.testSphere(centerWorld, radiusWorld);
 	}
 
 	@Override
 	public void Start() {
 		mesh = (Mesh) thing.getPart("Mesh");
+		texture = (Texture) thing.getPart("Texture");
 
 		float[] vertices = mesh.vertexArray;
 		if (vertices == null || vertices.length < 3) {
@@ -122,6 +118,7 @@ public class SphereCollider extends Part implements Bound, Collider {
 	public void Update() {
 		updateWorldSpace();
 		mesh.inFrustum = isOnFrustum();
+		texture.inFrustum = isOnFrustum();
 	}
 
 	@Override

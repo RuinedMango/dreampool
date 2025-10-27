@@ -32,15 +32,15 @@ public class ExampleScene {
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < 200; i++) {
+			for (int j = 0; j < 200; j++) {
 				Thing ball = new Thing("ball" + i + j);
-				ball.addPart(new Mesh("/models/bunny.obj", i % 2 >= 1 ? false : true));
 				ball.addPart(new AABBCollider(i % 2 >= 1 ? false : true));
 				ball.addPart(new Texture("/images/white.png"));
 				ball.addPart(new Texture("/images/white.png", 1));
+				ball.addPart(new Mesh("/models/Sphere.obj", i % 2 >= 1 ? false : true));
 				// ball.addPart(new Rotator());
-				ball.transform.position = new Vector3f(-i, 1, j);
+				ball.transform.position = new Vector3f(-i, -2, j);
 				scene.addThing(ball);
 			}
 		}
@@ -51,7 +51,7 @@ public class ExampleScene {
 		fps.addPart(new FPSDisplay(text));
 		Thing crosshair = new Thing("crosshair");
 		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Application.height / 2f),
-				(Application.width / 2f), 50f, 50f, 10, 100, 255, 1.0f);
+				(Application.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
 		crosshair.addPart(crossimage);
 		crosshair.addPart(new Crosshair(crossimage));
 		scene.addThing(player);

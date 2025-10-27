@@ -117,6 +117,8 @@ public class UIImage {
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, fb);
 
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
 	static void setupVAOandVBO() {

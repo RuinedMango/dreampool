@@ -89,6 +89,8 @@ public class Mesh extends Part {
 			GL11.glDrawArrays(GL40.GL_PATCHES, 0, vertexArray.length);
 			// GL46.glDrawElements(GL46.GL_TRIANGLES, indices.size(), GL46.GL_UNSIGNED_INT,
 			// 0);
+		} else {
+			return;
 		}
 	}
 

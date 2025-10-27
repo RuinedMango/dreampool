@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -227,6 +228,9 @@ public class Application {
 
 			GLFW.glfwSwapBuffers(window);
 			GLFW.glfwPollEvents();
+
+			GL15.glActiveTexture(GL13.GL_TEXTURE0);
+			GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
 			w.clear();
 			h.clear();
 		}

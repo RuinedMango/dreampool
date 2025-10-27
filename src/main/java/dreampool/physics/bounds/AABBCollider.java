@@ -5,7 +5,6 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import dreampool.core.Part;
 import dreampool.core.Thing;
@@ -27,17 +26,7 @@ public class AABBCollider extends Part implements Bound, Collider {
 
 	@Override
 	public boolean isOnFrustum() {
-		Vector4f[] planes = Camera.Singleton.frustum.planes;
-
-		for (Vector4f plane : planes) {
-			Vector3f v = new Vector3f(plane.x > 0 ? max.x : min.x, plane.y > 0 ? max.y : min.y,
-					plane.z > 0 ? max.z : min.z);
-
-			if (plane.x * v.x + plane.y * v.y + plane.z * v.z + plane.w < 0) {
-				return false;
-			}
-		}
-		return true;
+		return Camera.Singleton.frustum.testAab(min, max);
 	}
 
 	@Override
