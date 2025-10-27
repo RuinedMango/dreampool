@@ -39,7 +39,9 @@ public class PlayerController extends Part {
 	public void Update() {
 		processMovement(DeviceManager.Singleton.window);
 		// TODO eventually do something cool
-		fireRayFromCamera();
+		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+			fireRayFromCamera();
+		}
 	}
 
 	void processMovement(long window) {
