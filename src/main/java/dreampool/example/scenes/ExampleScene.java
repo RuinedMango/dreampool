@@ -32,6 +32,18 @@ public class ExampleScene {
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 
+		Thing fps = new Thing("fps");
+		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 255, 0, 0, 1, arial);
+		fps.addPart(text);
+		fps.addPart(new FPSDisplay(text));
+		Thing crosshair = new Thing("crosshair");
+		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Application.height / 2f),
+				(Application.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
+		crosshair.addPart(crossimage);
+		crosshair.addPart(new Crosshair(crossimage));
+		scene.addThing(player);
+		scene.addThing(fps);
+		scene.addThing(crosshair);
 		for (int i = 0; i < 1; i++) {
 			for (int j = 0; j < 1; j++) {
 				Thing ball = new Thing("ball" + i + j);
@@ -45,18 +57,5 @@ public class ExampleScene {
 				scene.addThing(ball);
 			}
 		}
-
-		Thing fps = new Thing("fps");
-		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 255, 0, 0, 1, arial);
-		fps.addPart(text);
-		fps.addPart(new FPSDisplay(text));
-		Thing crosshair = new Thing("crosshair");
-		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Application.height / 2f),
-				(Application.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
-		crosshair.addPart(crossimage);
-		crosshair.addPart(new Crosshair(crossimage));
-		scene.addThing(player);
-		scene.addThing(fps);
-		scene.addThing(crosshair);
 	}
 }

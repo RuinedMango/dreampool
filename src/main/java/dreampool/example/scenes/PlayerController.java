@@ -10,10 +10,13 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 import dreampool.IO.DeviceManager;
 import dreampool.core.Part;
+import dreampool.core.Thing;
 import dreampool.core.Time;
 import dreampool.physics.bounds.Collider;
+import dreampool.physics.bounds.SphereCollider;
 import dreampool.render.camera.Camera;
 import dreampool.render.model.Mesh;
+import dreampool.render.texture.Texture;
 
 public class PlayerController extends Part {
 	static boolean firstMouse = true;
@@ -89,7 +92,16 @@ public class PlayerController extends Part {
 		}
 
 		if (hitCollider != null) {
+			Vector3f hitPoint = new Vector3f(rayDir).mul(closestT).add(rayOrigin);
 			((Mesh) hitCollider.getThing().getPart("Mesh")).hit = true;
+			Thing ball = new Thing("ball");
+			ball.addPart(new Mesh("/models/Sphere.obj", true));
+			ball.addPart(new SphereCollider(true));
+			ball.addPart(new Texture("/images/white.png"));
+			ball.addPart(new Texture("/images/white.png", 1));
+			ball.addPart(new Rotator());
+			ball.transform.position = hitPoint;
+			thing.scene.addThing(ball);
 		}
 	}
 

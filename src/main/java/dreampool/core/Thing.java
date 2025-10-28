@@ -11,6 +11,7 @@ public class Thing {
 	// TODO fix runtime instantiation
 	public Scene scene;
 	public boolean startedOnce = false;
+	public int renderOrder = 0;
 	public Transform transform = new Transform();
 	public String name = "nilli";
 	public UUID uid = UUID.randomUUID();
@@ -58,6 +59,10 @@ public class Thing {
 		part.transform = this.transform;
 		toAdd.add(part);
 		dirty = true;
+
+		if (part.desiredRenderOrder != null) {
+			this.renderOrder = part.desiredRenderOrder;
+		}
 	}
 
 	// TODO figure out how to remove suppress warning.

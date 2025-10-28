@@ -17,6 +17,7 @@ public class Text extends Part {
 	public float size;
 
 	public Text(String text, float size, float x, float y, int r, int g, int b, float a, Font font) {
+		this.desiredRenderOrder = 100;
 		this.text = text;
 		position = new Vector2f(x / Application.resDivisor, y / Application.resDivisor);
 		color = new Vector4f((float) r / 255, (float) g / 255, (float) b / 255, a);

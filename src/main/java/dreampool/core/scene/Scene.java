@@ -1,6 +1,7 @@
 package dreampool.core.scene;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import dreampool.core.Thing;
@@ -30,14 +31,18 @@ public class Scene {
 	}
 
 	public void Update() {
-		fog.Update();
-		for (Thing thing : things) {
-			thing.Update();
-		}
-
 		if (!toAdd.isEmpty()) {
 			things.addAll(toAdd);
 			toAdd.clear();
+		}
+		fog.Update();
+		things.sort(Comparator.comparingInt(t -> t.renderOrder));
+		for (Thing thing : things) {
+			if (!thing.startedOnce) {
+				thing.startedOnce = true;
+				thing.Start();
+			}
+			thing.Update();
 		}
 	}
 
