@@ -18,27 +18,32 @@ public class Thing {
 	public List<Part> toAdd = new ArrayList<>();
 	// TODO actually implement removing
 	public List<Part> toRemove = new ArrayList<>();
+	private boolean dirty = false;
 
 	public Thing(String name) {
 		this.name = name;
 	}
 
 	public void Update() {
-		for (Part part : parts) {
-			part.Update();
-		}
-
-		if (!toAdd.isEmpty()) {
+		if (dirty) {
 			parts.addAll(toAdd);
 			toAdd.clear();
+			reorderParts();
+			dirty = false;
+		}
+		for (Part part : parts) {
+			part.Update();
 		}
 	}
 
 	public void Start() {
-		if (!toAdd.isEmpty()) {
+		if (dirty) {
 			parts.addAll(toAdd);
 			toAdd.clear();
+			reorderParts();
+			dirty = false;
 		}
+
 		for (Part part : parts) {
 			if (!part.startedOnce) {
 				part.startedOnce = true;
@@ -52,6 +57,7 @@ public class Thing {
 		part.thing = this;
 		part.transform = this.transform;
 		toAdd.add(part);
+		dirty = true;
 	}
 
 	// TODO figure out how to remove suppress warning.
@@ -76,5 +82,53 @@ public class Thing {
 			}
 		}
 		return null;
+	}
+
+	// Reorders parts by dependencies and dependents
+	private void reorderParts() {
+		boolean changed = true;
+		while (changed) {
+			changed = false;
+			for (int i = 0; i < parts.size(); i++) {
+				Part a = parts.get(i);
+				if (a.doBefore != null) {
+					for (Class<? extends Part> cls : a.doBefore) {
+						int j = indexOf(cls);
+						if (j != -1 && i > j) {
+							parts.remove(a);
+							parts.add(j, a);
+							changed = true;
+							break;
+						}
+					}
+				}
+				if (changed)
+					break;
+				if (a.doAfter != null) {
+					for (Class<? extends Part> cls : a.doAfter) {
+						int j = indexOf(cls);
+						if (j != -1 && i < j) {
+							parts.remove(a);
+							if (j >= parts.size())
+								j = parts.size() - 1;
+							parts.add(j + 1, a);
+							changed = true;
+							break;
+						}
+					}
+				}
+				if (changed)
+					break;
+			}
+		}
+	}
+
+	private int indexOf(Class<? extends Part> cls) {
+		for (int i = 0; i < parts.size(); i++) {
+			if (cls.isAssignableFrom(parts.get(i).getClass())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

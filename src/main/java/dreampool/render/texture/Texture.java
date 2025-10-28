@@ -11,6 +11,7 @@ import org.lwjgl.stb.STBImage;
 
 import dreampool.IO.FileUtils;
 import dreampool.core.Part;
+import dreampool.render.model.Mesh;
 
 public class Texture extends Part {
 	private String path;
@@ -35,6 +36,7 @@ public class Texture extends Part {
 	private static Map<String, TextureCacheEntry> textureCache = new HashMap<>();
 
 	public Texture(String path) {
+		this.doBefore = new Class[] { Mesh.class };
 		synchronized (textureCache) {
 			TextureCacheEntry entry = textureCache.get(path);
 			if (entry != null) {

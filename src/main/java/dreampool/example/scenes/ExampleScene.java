@@ -32,14 +32,14 @@ public class ExampleScene {
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < 1; i++) {
+			for (int j = 0; j < 1; j++) {
 				Thing ball = new Thing("ball" + i + j);
+				ball.addPart(new Mesh("/models/bunny.obj", true));
 				ball.addPart(new SphereCollider(true));
 				ball.addPart(new Texture("/images/white.png"));
 				ball.addPart(new Texture("/images/white.png", 1));
-				ball.addPart(new Mesh("/models/bunny.obj", true));
-				// ball.addPart(new Rotator());
+				ball.addPart(new Rotator());
 				ball.transform.position = new Vector3f(-i, -2, j);
 				ball.transform.size = new Vector3f(20, 20, 20);
 				scene.addThing(ball);
