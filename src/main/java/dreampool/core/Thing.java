@@ -16,7 +16,6 @@ public class Thing {
 	public UUID uid = UUID.randomUUID();
 	public List<Part> parts = new ArrayList<>();
 	public List<Part> toAdd = new ArrayList<>();
-	// TODO actually implement removing
 	public List<Part> toRemove = new ArrayList<>();
 	private boolean dirty = false;
 
@@ -28,6 +27,8 @@ public class Thing {
 		if (dirty) {
 			parts.addAll(toAdd);
 			toAdd.clear();
+			parts.removeAll(toRemove);
+			toRemove.clear();
 			reorderParts();
 			dirty = false;
 		}
@@ -40,6 +41,8 @@ public class Thing {
 		if (dirty) {
 			parts.addAll(toAdd);
 			toAdd.clear();
+			parts.removeAll(toRemove);
+			toRemove.clear();
 			reorderParts();
 			dirty = false;
 		}
@@ -62,6 +65,11 @@ public class Thing {
 		if (part.desiredRenderOrder != null) {
 			this.renderOrder = part.desiredRenderOrder;
 		}
+	}
+
+	public void removePart(Part part) {
+		toRemove.add(part);
+		dirty = true;
 	}
 
 	public <T extends Part> T getPart(Class<T> type) {

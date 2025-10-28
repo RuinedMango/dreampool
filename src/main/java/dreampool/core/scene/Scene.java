@@ -9,7 +9,6 @@ import dreampool.physics.bounds.Collider;
 import dreampool.render.fog.Fog;
 
 public class Scene {
-	// TODO fix runtime instantiation
 	public Fog fog;
 	public String name;
 	public List<Thing> things = new ArrayList<>();
@@ -25,7 +24,6 @@ public class Scene {
 		toAdd.add(thing);
 	}
 
-	// TODO actually implement removing
 	public void removeThing(Thing thing) {
 		toRemove.add(thing);
 	}
@@ -34,6 +32,10 @@ public class Scene {
 		if (!toAdd.isEmpty()) {
 			things.addAll(toAdd);
 			toAdd.clear();
+		}
+		if (!toRemove.isEmpty()) {
+			things.removeAll(toRemove);
+			toRemove.clear();
 		}
 		fog.Update();
 		things.sort(Comparator.comparingInt(t -> t.renderOrder));
@@ -54,6 +56,10 @@ public class Scene {
 		if (!toAdd.isEmpty()) {
 			things.addAll(toAdd);
 			toAdd.clear();
+		}
+		if (!toRemove.isEmpty()) {
+			things.removeAll(toRemove);
+			toRemove.clear();
 		}
 		for (Thing thing : things) {
 			if (!thing.startedOnce) {

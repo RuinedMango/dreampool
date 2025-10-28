@@ -100,7 +100,8 @@ public class PlayerController extends Part {
 			ball.addPart(new SphereCollider(true));
 			ball.addPart(new Texture("/images/white.png"));
 			ball.addPart(new Texture("/images/white.png", 1));
-			ball.addPart(new Rotator());
+			Rotator tator = new Rotator();
+			ball.addPart(tator);
 			ball.transform.position = hitPoint;
 			thing.scene.addThing(ball);
 		}
