@@ -8,7 +8,7 @@ import dreampool.audio.NoiseListener;
 import dreampool.core.Thing;
 import dreampool.core.Time;
 import dreampool.core.scene.Scene;
-import dreampool.physics.bounds.AABBCollider;
+import dreampool.physics.bounds.SphereCollider;
 import dreampool.render.camera.Camera;
 import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
@@ -34,7 +34,7 @@ public class ExampleScene {
 			for (int j = 0; j < 1; j++) {
 				Thing ball = new Thing("ball" + i + j);
 				ball.addPart(new Mesh("/models/bunny.obj", true));
-				ball.addPart(new AABBCollider(true));
+				ball.addPart(new SphereCollider(true));
 				ball.addPart(new Texture("/images/white.png"));
 				ball.addPart(new Texture("/images/white.png", 1));
 				ball.addPart(new Rotator());
