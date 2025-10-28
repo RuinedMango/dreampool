@@ -13,8 +13,10 @@ import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 
 public class AABBCollider extends Part implements Bound, Collider {
-	private Vector3f max = new Vector3f();
-	private Vector3f min = new Vector3f();
+	private final Vector3f localMin = new Vector3f();
+	private final Vector3f localMax = new Vector3f();
+	private final Vector3f worldMin = new Vector3f();
+	private final Vector3f worldMax = new Vector3f();
 	private Mesh mesh;
 	private Texture tex;
 
@@ -26,7 +28,7 @@ public class AABBCollider extends Part implements Bound, Collider {
 
 	@Override
 	public boolean isOnFrustum() {
-		return Camera.Singleton.frustum.testAab(min, max);
+		return Camera.Singleton.frustum.testAab(worldMin, worldMax);
 	}
 
 	@Override
@@ -67,8 +69,8 @@ public class AABBCollider extends Part implements Bound, Collider {
 				maxZ = z;
 		}
 
-		min = new Vector3f(minX, minY, minZ);
-		max = new Vector3f(maxX, maxY, maxZ);
+		localMin.set(minX, minY, minZ);
+		localMax.set(maxX, maxY, maxZ);
 
 		updateWorldBounds();
 	}
@@ -79,32 +81,25 @@ public class AABBCollider extends Part implements Bound, Collider {
 						(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)))
 				.scale(transform.size);
 
-		Vector3f[] corners = { new Vector3f(min.x, min.y, min.z), new Vector3f(max.x, min.y, min.z),
-				new Vector3f(min.x, max.y, min.z), new Vector3f(max.x, max.y, min.z), new Vector3f(min.x, min.y, max.z),
-				new Vector3f(max.x, min.y, max.z), new Vector3f(min.x, max.y, max.z),
-				new Vector3f(max.x, max.y, max.z) };
+		Vector3f[] corners = { new Vector3f(localMin.x, localMin.y, localMin.z),
+				new Vector3f(localMax.x, localMin.y, localMin.z), new Vector3f(localMin.x, localMax.y, localMin.z),
+				new Vector3f(localMax.x, localMax.y, localMin.z), new Vector3f(localMin.x, localMin.y, localMax.z),
+				new Vector3f(localMax.x, localMin.y, localMax.z), new Vector3f(localMin.x, localMax.y, localMax.z),
+				new Vector3f(localMax.x, localMax.y, localMax.z) };
 
-		Vector3f first = corners[0].mulPosition(model, new Vector3f());
-		float wMinX = first.x, wMaxX = first.x;
-		float wMinY = first.y, wMaxY = first.y;
-		float wMinZ = first.z, wMaxZ = first.z;
+		worldMin.set(Float.POSITIVE_INFINITY);
+		worldMax.set(Float.NEGATIVE_INFINITY);
 
-		for (int i = 1; i < corners.length; i++) {
-			Vector3f v = corners[i].mulPosition(model, new Vector3f());
-			wMinX = Math.min(wMinX, v.x);
-			wMaxX = Math.max(wMaxX, v.x);
-			wMinY = Math.min(wMinY, v.y);
-			wMaxY = Math.max(wMaxY, v.y);
-			wMinZ = Math.min(wMinZ, v.z);
-			wMaxZ = Math.max(wMaxZ, v.z);
+		for (Vector3f v : corners) {
+			model.transformPosition(v);
+			worldMin.min(v);
+			worldMax.max(v);
 		}
-
-		min.set(wMinX, wMinY, wMinZ);
-		max.set(wMaxX, wMaxY, wMaxZ);
 	}
 
 	@Override
 	public void Update() {
+		updateWorldBounds();
 		boolean onFrustum = isOnFrustum();
 		mesh.inFrustum = onFrustum;
 		tex.inFrustum = onFrustum;
@@ -112,12 +107,12 @@ public class AABBCollider extends Part implements Bound, Collider {
 
 	@Override
 	public Vector3f getMin() {
-		return min;
+		return worldMin;
 	}
 
 	@Override
 	public Vector3f getMax() {
-		return max;
+		return worldMax;
 	}
 
 	// TODO implement other intersection types
@@ -126,14 +121,14 @@ public class AABBCollider extends Part implements Bound, Collider {
 		if (!active) {
 			return 0;
 		}
-		float result = Intersectionf.intersectRayAab(origin.x, origin.y, origin.z, dir.x, dir.y, dir.z, min.x, min.y,
-				min.z, max.x, max.y, max.z, new Vector2f()) ? 1f : -1f;
+		float result = Intersectionf.intersectRayAab(origin.x, origin.y, origin.z, dir.x, dir.y, dir.z, worldMin.x,
+				worldMin.y, worldMin.z, worldMax.x, worldMax.y, worldMax.z, new Vector2f()) ? 1f : -1f;
 
 		if (result < 0)
 			return -1;
 
 		Vector2f t = new Vector2f();
-		if (Intersectionf.intersectRayAab(origin, dir, min, max, t))
+		if (Intersectionf.intersectRayAab(origin, dir, worldMin, worldMax, t))
 			return t.x >= 0 ? t.x : t.y;
 		return -1;
 	}

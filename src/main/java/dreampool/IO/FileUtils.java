@@ -226,7 +226,7 @@ public class FileUtils {
 		STBImage.stbi_set_flip_vertically_on_load(true);
 		ByteBuffer image = STBImage.stbi_load_from_memory(MemoryUtil.memSlice(buffer), w, h, comp, 0);
 		if (image == null) {
-			System.out.println("fuck");
+			System.out.println("Welp gorsh");
 		}
 		return image;
 	}
@@ -257,7 +257,7 @@ public class FileUtils {
 		STBImage.stbi_set_flip_vertically_on_load(true);
 		ByteBuffer image = STBImage.stbi_load_from_memory(MemoryUtil.memSlice(buffer), w, h, comp, 0);
 		if (image == null) {
-			System.out.println("fuck");
+			System.out.println("Welp gorsh");
 		}
 		text.width = w.get(0);
 		text.height = h.get(0);

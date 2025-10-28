@@ -160,7 +160,7 @@ public class Application {
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
 		GL20.glEnableVertexAttribArray(2);
 
-		SceneManager manager = new SceneManager(new ExampleScene().scene);
+		SceneManager manager = new SceneManager(new ExampleScene().generateScene());
 
 		@SuppressWarnings("unused")
 		DeviceManager device = new DeviceManager(window);
