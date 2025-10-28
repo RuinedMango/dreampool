@@ -31,8 +31,8 @@ public class AABBCollider extends Part implements Bound, Collider {
 
 	@Override
 	public void Start() {
-		mesh = (Mesh) thing.getPart("Mesh");
-		tex = (Texture) thing.getPart("Texture");
+		mesh = thing.getPart(Mesh.class);
+		tex = thing.getPart(Texture.class);
 
 		float[] vertices = mesh.vertexArray;
 		if (vertices == null || vertices.length == 0) {

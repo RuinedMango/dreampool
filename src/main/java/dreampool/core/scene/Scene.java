@@ -66,7 +66,7 @@ public class Scene {
 	public List<Collider> getColliders() {
 		List<Collider> colliders = new ArrayList<>();
 		for (Thing thing : this.things) {
-			Collider collider = thing.getPartExtendsOrImplements("Collider");
+			Collider collider = thing.getPartExtendsOrImplements(Collider.class);
 			if (collider != null) {
 				colliders.add(collider);
 			}

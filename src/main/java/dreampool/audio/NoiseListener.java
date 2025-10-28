@@ -17,7 +17,7 @@ public class NoiseListener extends Part {
 
 	@Override
 	public void Start() {
-		cam = (Camera) thing.getPart("Camera");
+		cam = thing.getPart(Camera.class);
 	}
 
 	@Override

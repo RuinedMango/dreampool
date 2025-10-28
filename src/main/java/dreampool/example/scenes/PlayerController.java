@@ -34,8 +34,8 @@ public class PlayerController extends Part {
 	@Override
 	public void Start() {
 		DeviceManager.Singleton.setCursorPosCallback(myMouseCallback());
-		cam = (Camera) thing.getPart("Camera");
-		colliders = thing.scene.getColliders();
+		cam = thing.getPart(Camera.class);
+
 	}
 
 	@Override
@@ -43,6 +43,7 @@ public class PlayerController extends Part {
 		processMovement(DeviceManager.Singleton.window);
 		// TODO eventually do something cool
 		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+			colliders = thing.scene.getColliders();
 			fireRayFromCamera();
 		}
 	}
@@ -93,7 +94,7 @@ public class PlayerController extends Part {
 
 		if (hitCollider != null) {
 			Vector3f hitPoint = new Vector3f(rayDir).mul(closestT).add(rayOrigin);
-			((Mesh) hitCollider.getThing().getPart("Mesh")).hit = true;
+			hitCollider.getThing().getPart(Mesh.class).hit = true;
 			Thing ball = new Thing("ball");
 			ball.addPart(new Mesh("/models/Sphere.obj", true));
 			ball.addPart(new SphereCollider(true));

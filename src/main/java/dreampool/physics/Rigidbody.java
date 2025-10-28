@@ -12,7 +12,7 @@ public class Rigidbody extends Part {
 
 	@Override
 	public void Start() {
-		collider = thing.getPartExtendsOrImplements("Bound");
+		collider = thing.getPartExtendsOrImplements(Bound.class);
 	}
 
 	@Override

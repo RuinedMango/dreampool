@@ -8,7 +8,6 @@ import dreampool.core.scene.Scene;
 import dreampool.core.transform.Transform;
 
 public class Thing {
-	// TODO fix runtime instantiation
 	public Scene scene;
 	public boolean startedOnce = false;
 	public int renderOrder = 0;
@@ -65,25 +64,19 @@ public class Thing {
 		}
 	}
 
-	// TODO figure out how to remove suppress warning.
-	@SuppressWarnings("unchecked")
-	public <T extends Part> T getPart(String type) {
+	public <T extends Part> T getPart(Class<T> type) {
 		for (Part part : parts) {
-			if (part.getClass().getSimpleName().equals(type)) {
-				return (T) part;
+			if (type.isInstance(part)) {
+				return type.cast(part);
 			}
 		}
 		return null;
 	}
 
-	// TODO here too
-	@SuppressWarnings("unchecked")
-	public <T extends Part> T getPartExtendsOrImplements(String extension) {
+	public <T> T getPartExtendsOrImplements(Class<T> type) {
 		for (Part part : parts) {
-			for (Class<?> interfac : part.getClass().getInterfaces()) {
-				if (interfac.getSimpleName().equals(extension)) {
-					return (T) part;
-				}
+			if (type.isAssignableFrom(part.getClass())) {
+				return type.cast(part);
 			}
 		}
 		return null;
