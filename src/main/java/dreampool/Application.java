@@ -5,8 +5,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
@@ -23,7 +21,8 @@ import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
 import dreampool.example.scenes.ExampleScene;
-import dreampool.render.shader.AdvShader;
+import dreampool.render.RenderPipeline;
+import dreampool.render.pass.GeometryPass;
 import dreampool.render.shader.PostShader;
 
 public class Application {
@@ -41,8 +40,6 @@ public class Application {
 
 	static float quadVertices[] = { -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, -1.0f,
 			1.0f, 0.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-
-	public static AdvShader mainShader;
 
 	public static void main(String[] args) {
 		GLFW.glfwInit();
@@ -70,6 +67,8 @@ public class Application {
 
 		AudioDevice sound = new AudioDevice();
 		// AssetLoader assetLoader = new AssetLoader();
+		RenderPipeline renderPipeline = new RenderPipeline();
+		renderPipeline.addPass(new GeometryPass());
 
 		FBO = GL30.glGenFramebuffers();
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
@@ -103,12 +102,6 @@ public class Application {
 		post.use();
 		post.setInt("levels", 16);
 		post.setInt("screenTexture", 0);
-
-		mainShader = new AdvShader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs",
-				"/shaders/main.tes");
-		mainShader.use();
-		mainShader.setInt("texture1", 0);
-		mainShader.setInt("texture2", 1);
 
 		int quadVAO = GL30.glGenVertexArrays();
 		int quadVBO = GL15.glGenBuffers();
@@ -147,15 +140,13 @@ public class Application {
 		GL11.glHint(GL11.GL_LINE_SMOOTH, GL11.GL_DONT_CARE);
 		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
 
-		Vector2f lightDir = new Vector2f(90, 0);
-
 		if (wireframe) {
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
 
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
-
+			renderPipeline.beginFrame();
 			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -167,25 +158,16 @@ public class Application {
 			height = h.get(0);
 			projection = new Matrix4f().perspective(70.0f, (w.get(0) / resDivisor) / (h.get(0) / resDivisor), 0.1f,
 					50.0f);
-			mainShader.use();
-			mainShader.setMat4("projection", projection);
-			mainShader.setVec2("targetResolution", (int) (w.get(0) / resDivisor) / 2,
-					(int) (h.get(0) / resDivisor) / 2);
-
-			lightDir.add(new Vector2f(75 * Time.deltaTime, 0));
-
-			mainShader.setVec2("lightDir", lightDir);
-			mainShader.setVec3("ambientColor", new Vector3f(0.2f, 0.2f, 0.2f));
-			mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 
 			GL11.glViewport(0, 0, (int) (width / resDivisor), (int) (height / resDivisor));
 			manager.currentScene.Update();
+			renderPipeline.execute();
 
 			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-			GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			GL15.glActiveTexture(GL13.GL_TEXTURE0);
+			GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
 
 			post.use();
 			GL11.glViewport(0, 0, w.get(0), h.get(0));
@@ -200,8 +182,12 @@ public class Application {
 
 			GL15.glActiveTexture(GL13.GL_TEXTURE0);
 			GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
+
+			GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			w.clear();
 			h.clear();
+			renderPipeline.endFrame();
 		}
 
 		sound.destroy();

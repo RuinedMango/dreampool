@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.stb.STBImage;
 
 import dreampool.IO.FileUtils;
@@ -20,7 +19,7 @@ public class Texture extends Part {
 	public int width;
 	public int height;
 	public int comps;
-	private int unit;
+	public int unit;
 	public boolean inFrustum;
 
 	private static class TextureCacheEntry {
@@ -95,16 +94,11 @@ public class Texture extends Part {
 
 	@Override
 	public void Start() {
+		thing.getPart(Mesh.class).textures.add(this);
 	}
 
 	@Override
 	public void Update() {
-		if (inFrustum) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, ID);
-		} else {
-			return;
-		}
 	}
 
 	public String getPath() {

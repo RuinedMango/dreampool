@@ -18,9 +18,9 @@ public class MeshPool {
 	public static class PoolEntry {
 		// float[] vertices;
 		// int[] indices;
-		int VAO;
-		int VBO;
-		int EBO;
+		public int VAO;
+		public int VBO;
+		public int EBO;
 		public float[] vertices;
 		public int[] indices;
 		int refCount;

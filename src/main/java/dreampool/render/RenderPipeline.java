@@ -3,7 +3,6 @@ package dreampool.render;
 import java.util.ArrayList;
 import java.util.List;
 
-import dreampool.core.scene.Scene;
 import dreampool.render.camera.Camera;
 import dreampool.render.pass.RenderPass;
 
@@ -29,16 +28,18 @@ public class RenderPipeline {
 		passes.add(pass);
 	}
 
-	public void execute(Scene scene) {
+	public void execute() {
 		for (RenderPass pass : passes) {
 			pass.start();
-			pass.render(scene, camera);
+			pass.render(cmds, camera);
 			pass.end();
 		}
+		cmds.clear();
 	}
 
 	public void submit(RenderCommand cmd) {
 		cmds.add(cmd);
+		cmds.sort((a, b) -> Integer.compare(a.sortKey, b.sortKey));
 	}
 
 	public void endFrame() {

@@ -35,7 +35,6 @@ public class Camera extends Part {
 		Vector3f cameraPos = transform.position;
 		cameraPos.add(front, frontPos);
 		matrix = new Matrix4f().lookAt(cameraPos, frontPos, up);
-		Application.mainShader.setMat4("view", matrix);
 
 		Matrix4f projViewMatrix = new Matrix4f();
 		projViewMatrix.set(Application.projection);

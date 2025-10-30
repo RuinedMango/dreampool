@@ -2,8 +2,6 @@ package dreampool.render.fog;
 
 import org.joml.Vector4f;
 
-import dreampool.Application;
-
 // TODO abstract away from scene and Application
 public class Fog {
 	public static Fog Singleton;
@@ -31,9 +29,9 @@ public class Fog {
 	}
 
 	public void Start() {
-		Application.mainShader.setVec4("fogColor", color);
-		Application.mainShader.setFloat("fogDepthMax", depthMax);
-		Application.mainShader.setFloat("fogDepthMin", depthMin);
+		// Application.mainShader.setVec4("fogColor", color);
+		// Application.mainShader.setFloat("fogDepthMax", depthMax);
+		// Application.mainShader.setFloat("fogDepthMin", depthMin);
 	}
 
 	public void Update() {
