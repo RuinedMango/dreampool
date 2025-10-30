@@ -9,6 +9,7 @@ import org.joml.Quaternionf;
 import dreampool.core.Part;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderPipeline;
+import dreampool.render.RenderStage;
 import dreampool.render.texture.Texture;
 
 // TODO implement skeletal animation and fix instancing and possibly add texture atlases.
@@ -25,7 +26,7 @@ public class Mesh extends Part {
 	public Mesh(String path, boolean flat) {
 		this.flat = flat;
 
-		entry = MeshPool.registerMesh(path);
+		entry = MeshPool.Singleton.registerMesh(path);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class Mesh extends Part {
 			model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x),
 					(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
 			model.scale(transform.size);
-			RenderPipeline.Singleton.submit(new RenderCommand(this, textures, model));
+			RenderPipeline.Singleton.submit(new RenderCommand(RenderStage.GEOMETRY, this, textures, model));
 			// GL46.glDrawElements(GL46.GL_TRIANGLES, entry.indices.length,
 			// GL46.GL_UNSIGNED_INT, 0);
 		} else {

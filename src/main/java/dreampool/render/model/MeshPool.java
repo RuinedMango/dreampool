@@ -46,7 +46,7 @@ public class MeshPool {
 		}
 	}
 
-	public static Map<String, PoolEntry> meshPool = new HashMap<>();
+	public Map<String, PoolEntry> meshPool = new HashMap<>();
 
 	public MeshPool() {
 		if (Singleton != null) {
@@ -56,7 +56,7 @@ public class MeshPool {
 		}
 	}
 
-	public static PoolEntry registerMesh(String path) {
+	public PoolEntry registerMesh(String path) {
 		synchronized (meshPool) {
 			PoolEntry entry = meshPool.get(path);
 			if (entry != null) {
@@ -97,5 +97,12 @@ public class MeshPool {
 
 		meshPool.put(path, entry);
 		return entry;
+	}
+
+	public void destroy() {
+		meshPool.forEach((s, v) -> {
+			v.destroy();
+		});
+		meshPool.clear();
 	}
 }

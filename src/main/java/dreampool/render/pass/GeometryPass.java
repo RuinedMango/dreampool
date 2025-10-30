@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL40;
 import dreampool.Application;
 import dreampool.core.Time;
 import dreampool.render.RenderCommand;
+import dreampool.render.RenderStage;
 import dreampool.render.camera.Camera;
 import dreampool.render.model.Mesh;
 import dreampool.render.shader.AdvShader;
@@ -70,6 +71,17 @@ public class GeometryPass implements RenderPass {
 	@Override
 	public void end() {
 		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public RenderStage getTag() {
+		// TODO Auto-generated method stub
+		return RenderStage.GEOMETRY;
+	}
+
+	@Override
+	public void destroy() {
 
 	}
 

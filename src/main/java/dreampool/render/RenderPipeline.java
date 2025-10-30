@@ -3,6 +3,11 @@ package dreampool.render;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+
+import dreampool.Application;
 import dreampool.render.camera.Camera;
 import dreampool.render.pass.RenderPass;
 
@@ -21,7 +26,9 @@ public class RenderPipeline {
 	}
 
 	public void beginFrame() {
-		// Nothing yet
+		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, Application.FBO);
+		GL11.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 
 	public void addPass(RenderPass pass) {
@@ -31,7 +38,13 @@ public class RenderPipeline {
 	public void execute() {
 		for (RenderPass pass : passes) {
 			pass.start();
-			pass.render(cmds, camera);
+			List<RenderCommand> suitableCommands = new ArrayList<>();
+			for (RenderCommand cmd : cmds) {
+				if (cmd.target == pass.getTag()) {
+					suitableCommands.add(cmd);
+				}
+			}
+			pass.render(suitableCommands, camera);
 			pass.end();
 		}
 		cmds.clear();
@@ -43,6 +56,13 @@ public class RenderPipeline {
 	}
 
 	public void endFrame() {
-		// Nothing yet
+		GLFW.glfwSwapBuffers(Application.window);
+		GLFW.glfwPollEvents();
+	}
+
+	public void destroy() {
+		for (RenderPass pass : passes) {
+			pass.destroy();
+		}
 	}
 }

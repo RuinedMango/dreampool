@@ -11,10 +11,12 @@ public class RenderCommand {
 	public Mesh mesh;
 	public Matrix4f modelMat;
 	public List<Texture> textures;
+	public RenderStage target;
 
 	public int sortKey;
 
-	public RenderCommand(Mesh mesh, List<Texture> textures, Matrix4f modelMat) {
+	public RenderCommand(RenderStage target, Mesh mesh, List<Texture> textures, Matrix4f modelMat) {
+		this.target = target;
 		this.mesh = mesh;
 		this.modelMat = modelMat;
 		this.textures = textures;

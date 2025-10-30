@@ -9,9 +9,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryStack;
@@ -22,8 +19,9 @@ import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
 import dreampool.example.scenes.ExampleScene;
 import dreampool.render.RenderPipeline;
+import dreampool.render.model.MeshPool;
 import dreampool.render.pass.GeometryPass;
-import dreampool.render.shader.PostShader;
+import dreampool.render.pass.PostPass;
 
 public class Application {
 	// TODO fix this whole god awful class
@@ -31,15 +29,12 @@ public class Application {
 	public static int width;
 	public static int height;
 	public static float resDivisor = 2;
-	private static long window;
+	public static long window;
 	static boolean wireframe = false;
-	static int FBO;
+	public static int FBO;
 	static int RBO;
 
-	static int FBOtex;
-
-	static float quadVertices[] = { -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, -1.0f,
-			1.0f, 0.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+	public static int FBOtex;
 
 	public static void main(String[] args) {
 		GLFW.glfwInit();
@@ -67,8 +62,10 @@ public class Application {
 
 		AudioDevice sound = new AudioDevice();
 		// AssetLoader assetLoader = new AssetLoader();
+		MeshPool modelPool = new MeshPool();
 		RenderPipeline renderPipeline = new RenderPipeline();
 		renderPipeline.addPass(new GeometryPass());
+		renderPipeline.addPass(new PostPass());
 
 		FBO = GL30.glGenFramebuffers();
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
@@ -98,30 +95,6 @@ public class Application {
 		}
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
-		PostShader post = new PostShader("/shaders/dither.frag");
-		post.use();
-		post.setInt("levels", 16);
-		post.setInt("screenTexture", 0);
-
-		int quadVAO = GL30.glGenVertexArrays();
-		int quadVBO = GL15.glGenBuffers();
-		GL30.glBindVertexArray(quadVAO);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
-		GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 4 * Float.BYTES, 0);
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-		GL20.glEnableVertexAttribArray(1);
-
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		GL30.glBindVertexArray(0);
-
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, Float.BYTES * 9, 0);
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 3);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
-		GL20.glEnableVertexAttribArray(2);
-
 		SceneManager manager = new SceneManager(new ExampleScene().generateScene());
 
 		@SuppressWarnings("unused")
@@ -147,11 +120,6 @@ public class Application {
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			time.update();
 			renderPipeline.beginFrame();
-			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-			GL11.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 			GLFW.glfwGetWindowSize(window, w, h);
 			width = w.get(0);
@@ -163,36 +131,16 @@ public class Application {
 			manager.currentScene.Update();
 			renderPipeline.execute();
 
-			GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-			GL15.glActiveTexture(GL13.GL_TEXTURE0);
-			GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
-
-			post.use();
-			GL11.glViewport(0, 0, w.get(0), h.get(0));
-			GL30.glBindVertexArray(quadVAO);
-			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
-			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, quadVertices, GL15.GL_STATIC_DRAW);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FBOtex);
-			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
-
-			GLFW.glfwSwapBuffers(window);
-			GLFW.glfwPollEvents();
-
-			GL15.glActiveTexture(GL13.GL_TEXTURE0);
-			GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
-
-			GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			renderPipeline.endFrame();
 			w.clear();
 			h.clear();
-			renderPipeline.endFrame();
 		}
 
 		sound.destroy();
 		// assetLoader.shutdown();
 
+		modelPool.destroy();
+		renderPipeline.destroy();
 		GL30.glDeleteFramebuffers(FBO);
 		GL30.glDeleteRenderbuffers(RBO);
 
