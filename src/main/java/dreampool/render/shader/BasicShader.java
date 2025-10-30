@@ -1,4 +1,4 @@
-package dreampool.render;
+package dreampool.render.shader;
 
 import java.nio.FloatBuffer;
 
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL20;
 
 import dreampool.IO.FileUtils;
 
-public class BasicShader {
+public class BasicShader implements Shader {
 	public int ID;
 
 	public BasicShader(String vertPath, String fragPath) {

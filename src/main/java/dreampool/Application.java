@@ -23,8 +23,8 @@ import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
 import dreampool.example.scenes.ExampleScene;
-import dreampool.render.PostShader;
-import dreampool.render.Shader;
+import dreampool.render.shader.AdvShader;
+import dreampool.render.shader.PostShader;
 
 public class Application {
 	// TODO fix this whole god awful class
@@ -34,21 +34,15 @@ public class Application {
 	public static float resDivisor = 2;
 	private static long window;
 	static boolean wireframe = false;
-	public static int VBO;
-	public static int VAO;
-	static int EBO;
 	static int FBO;
 	static int RBO;
 
 	static int FBOtex;
 
-	static int fontVAO;
-	static int fontVBO;
-
 	static float quadVertices[] = { -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, -1.0f,
 			1.0f, 0.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
-	public static Shader mainShader;
+	public static AdvShader mainShader;
 
 	public static void main(String[] args) {
 		GLFW.glfwInit();
@@ -76,15 +70,6 @@ public class Application {
 
 		AudioDevice sound = new AudioDevice();
 		// AssetLoader assetLoader = new AssetLoader();
-
-		VAO = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(VAO);
-
-		VBO = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
-
-		EBO = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 		FBO = GL30.glGenFramebuffers();
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
@@ -119,20 +104,11 @@ public class Application {
 		post.setInt("levels", 16);
 		post.setInt("screenTexture", 0);
 
-		mainShader = new Shader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs", "/shaders/main.tes");
+		mainShader = new AdvShader("/shaders/main.vert", "/shaders/main.frag", "/shaders/main.tcs",
+				"/shaders/main.tes");
 		mainShader.use();
 		mainShader.setInt("texture1", 0);
 		mainShader.setInt("texture2", 1);
-
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 8 * Float.BYTES, 0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
-		GL20.glEnableVertexAttribArray(2);
-		GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 8 * Float.BYTES, 5 * Float.BYTES);
-
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		GL30.glBindVertexArray(0);
 
 		int quadVAO = GL30.glGenVertexArrays();
 		int quadVBO = GL15.glGenBuffers();
@@ -145,13 +121,6 @@ public class Application {
 
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		GL30.glBindVertexArray(0);
-
-		fontVAO = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(fontVAO);
-
-		fontVBO = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, fontVBO);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 1024 * 1024, GL15.GL_DYNAMIC_DRAW);
 
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, Float.BYTES * 9, 0);
 		GL20.glEnableVertexAttribArray(0);
@@ -238,9 +207,6 @@ public class Application {
 		sound.destroy();
 		// assetLoader.shutdown();
 
-		GL30.glDeleteVertexArrays(VAO);
-		GL15.glDeleteBuffers(VBO);
-		GL15.glDeleteBuffers(EBO);
 		GL30.glDeleteFramebuffers(FBO);
 		GL30.glDeleteRenderbuffers(RBO);
 

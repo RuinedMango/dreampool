@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import dreampool.Application;
-import dreampool.render.BasicShader;
+import dreampool.render.shader.BasicShader;
 import dreampool.render.texture.Texture;
 
 public class UIImage {

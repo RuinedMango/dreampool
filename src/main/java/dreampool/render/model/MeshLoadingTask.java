@@ -31,9 +31,9 @@ public class MeshLoadingTask implements AssetLoadingTask {
 	@Override
 	public void onComplete() {
 		// Update the cache after loading
-		synchronized (Mesh.meshCache) {
-			// Mesh.meshCache.put(path, new Mesh.CacheEntry(vertices, indices));
-		}
+		// synchronized (Mesh.meshCache) {
+		// Mesh.meshCache.put(path, new Mesh.CacheEntry(vertices, indices));
+		// }
 	}
 
 }

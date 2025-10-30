@@ -36,7 +36,7 @@ public class AABBCollider extends Part implements Bound, Collider {
 		mesh = thing.getPart(Mesh.class);
 		tex = thing.getPart(Texture.class);
 
-		float[] vertices = mesh.vertexArray;
+		float[] vertices = mesh.entry.vertices;
 		if (vertices == null || vertices.length == 0) {
 			throw new IllegalArgumentException("No vertices found in mesh: " + mesh);
 		}

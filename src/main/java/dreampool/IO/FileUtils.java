@@ -25,7 +25,6 @@ import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 
 public class FileUtils {
@@ -37,7 +36,17 @@ public class FileUtils {
 	}
 
 	// TODO make this support more stuff and make it less error prone
-	public static Mesh.CacheEntry readObjMeshResource(String path) throws IOException {
+	public static class Doublet {
+		public float[] vertices;
+		public int[] indices;
+
+		public Doublet(float[] vertices, int[] indices) {
+			this.vertices = vertices;
+			this.indices = indices;
+		}
+	}
+
+	public static Doublet readObjMeshResource(String path) throws IOException {
 		List<Float> vertices = new ArrayList<>();
 		List<Integer> indices = new ArrayList<>();
 		List<Integer> vertexIndices = new ArrayList<>();
@@ -128,7 +137,7 @@ public class FileUtils {
 		for (int i = 0; i < indices.size(); i++)
 			indicesList[i] = indices.get(i);
 
-		return new Mesh.CacheEntry(verticesList, indicesList);
+		return new Doublet(verticesList, indicesList);
 	}
 
 	public static ByteBuffer resourceToByteBuffer(String path, int bufferSize) {

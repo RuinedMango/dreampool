@@ -7,6 +7,7 @@ import java.util.List;
 import dreampool.core.Thing;
 import dreampool.physics.bounds.Collider;
 import dreampool.render.fog.Fog;
+import dreampool.render.model.Mesh;
 
 public class Scene {
 	public Fog fog;
@@ -78,5 +79,16 @@ public class Scene {
 			}
 		}
 		return colliders;
+	}
+
+	public List<Mesh> getMeshes() {
+		List<Mesh> meshes = new ArrayList<>();
+		for (Thing thing : this.things) {
+			Mesh mesh = thing.getPartExtendsOrImplements(Mesh.class);
+			if (mesh != null) {
+				meshes.add(mesh);
+			}
+		}
+		return meshes;
 	}
 }

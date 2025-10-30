@@ -23,7 +23,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import dreampool.Application;
 import dreampool.IO.FileUtils;
-import dreampool.render.BasicShader;
+import dreampool.render.shader.BasicShader;
 
 public class Font {
 	public ByteBuffer bitmap;

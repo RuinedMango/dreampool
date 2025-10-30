@@ -38,7 +38,7 @@ public class SphereCollider extends Part implements Bound, Collider {
 		mesh = thing.getPart(Mesh.class);
 		texture = thing.getPart(Texture.class);
 
-		float[] vertices = mesh.vertexArray;
+		float[] vertices = mesh.entry.vertices;
 		if (vertices == null || vertices.length < 3) {
 			centerWorld = new Vector3f(0, 0, 0);
 			radiusWorld = 0;

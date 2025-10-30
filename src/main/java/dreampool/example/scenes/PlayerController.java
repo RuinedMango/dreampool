@@ -26,6 +26,11 @@ public class PlayerController extends Part {
 	static float lastY = 600.0f / 2.0f;
 	public Camera cam;
 	public List<Collider> colliders = new ArrayList<>();
+	public float baseSpeed = 2.5f;
+	public float sprintMultiplier = 4;
+	private float speedHolder;
+	private boolean rightPressable = true;
+	private boolean leftPressable = true;
 
 	public PlayerController() {
 
@@ -40,11 +45,27 @@ public class PlayerController extends Part {
 
 	@Override
 	public void Update() {
+		speedHolder = baseSpeed;
 		processMovement(DeviceManager.Singleton.window);
 		// TODO eventually do something cool
-		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+		if (leftPressable && GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+				GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
 			colliders = thing.scene.getColliders();
 			fireRayFromCamera();
+			leftPressable = false;
+		}
+		if (rightPressable && GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+				GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+			colliders = thing.scene.getColliders();
+			fireDestructionRayFromCamera();
+			rightPressable = false;
+		}
+		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_RELEASE) {
+			leftPressable = true;
+		}
+		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+				GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_RELEASE) {
+			rightPressable = true;
 		}
 	}
 
@@ -53,7 +74,11 @@ public class PlayerController extends Part {
 			GLFW.glfwSetWindowShouldClose(window, true);
 		}
 		Vector3f temp = new Vector3f();
-		float cameraSpeed = 2.5f * Time.deltaTime;
+		if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS
+				|| GLFW.glfwGetKey(window, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS) {
+			speedHolder = baseSpeed * sprintMultiplier;
+		}
+		float cameraSpeed = speedHolder * Time.deltaTime;
 		if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
 			cam.front.mul(cameraSpeed, temp);
 			transform.position.add(temp);
@@ -96,14 +121,35 @@ public class PlayerController extends Part {
 			Vector3f hitPoint = new Vector3f(rayDir).mul(closestT).add(rayOrigin);
 			hitCollider.getThing().getPart(Mesh.class).hit = true;
 			Thing ball = new Thing("ball");
-			ball.addPart(new Mesh("/models/Sphere.obj", true));
+			ball.addPart(new Mesh("/models/Sphere.obj", false));
 			ball.addPart(new SphereCollider(true));
 			ball.addPart(new Texture("/images/white.png"));
 			ball.addPart(new Texture("/images/white.png", 1));
-			Rotator tator = new Rotator();
-			ball.addPart(tator);
+			ball.addPart(new Rotator());
 			ball.transform.position = hitPoint;
 			thing.scene.addThing(ball);
+		}
+	}
+
+	// TODO implement BHV over this stupid shit
+	private void fireDestructionRayFromCamera() {
+		Vector3f rayOrigin = new Vector3f(transform.position);
+		Vector3f rayDir = new Vector3f(cam.front).normalize();
+
+		float closestT = Float.POSITIVE_INFINITY;
+		Collider hitCollider = null;
+
+		for (Collider c : colliders) {
+			float t = c.intersectRay(rayOrigin, rayDir);
+			if (t > 0 && t < closestT) {
+				closestT = t;
+				hitCollider = c;
+			}
+		}
+
+		if (hitCollider != null) {
+			hitCollider.getThing().getPart(Mesh.class).hit = true;
+			thing.scene.removeThing(hitCollider.getThing());
 		}
 	}
 
