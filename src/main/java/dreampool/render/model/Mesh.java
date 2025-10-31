@@ -29,6 +29,9 @@ public class Mesh extends Part {
 		entry = MeshPool.Singleton.registerMesh(path);
 	}
 
+	public Mesh() {
+	}
+
 	@Override
 	public void Update() {
 		if (inFrustum) {

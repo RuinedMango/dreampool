@@ -34,6 +34,10 @@ public class Texture extends Part {
 
 	private static Map<String, TextureCacheEntry> textureCache = new HashMap<>();
 
+	public Texture(int ID) {
+		this.ID = ID;
+	}
+
 	public Texture(String path) {
 		this.doBefore = new Class[] { Mesh.class };
 		synchronized (textureCache) {

@@ -49,7 +49,7 @@ public class ExampleScene {
 		}
 
 		Thing fps = new Thing("fps");
-		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 255, 0, 0, 1, arial);
+		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 190, 0, 75, 1, arial);
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
 		Thing crosshair = new Thing("crosshair");

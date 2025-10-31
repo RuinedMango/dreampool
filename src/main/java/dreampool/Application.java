@@ -22,6 +22,7 @@ import dreampool.render.RenderPipeline;
 import dreampool.render.model.MeshPool;
 import dreampool.render.pass.GeometryPass;
 import dreampool.render.pass.PostPass;
+import dreampool.render.pass.UIPass;
 
 public class Application {
 	// TODO fix this whole god awful class
@@ -65,6 +66,7 @@ public class Application {
 		MeshPool modelPool = new MeshPool();
 		RenderPipeline renderPipeline = new RenderPipeline();
 		renderPipeline.addPass(new GeometryPass());
+		renderPipeline.addPass(new UIPass());
 		renderPipeline.addPass(new PostPass());
 
 		FBO = GL30.glGenFramebuffers();

@@ -21,9 +21,13 @@ import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryUtil;
 
-import dreampool.Application;
 import dreampool.IO.FileUtils;
-import dreampool.render.shader.BasicShader;
+import dreampool.render.RenderCommand;
+import dreampool.render.RenderPipeline;
+import dreampool.render.RenderStage;
+import dreampool.render.model.Mesh;
+import dreampool.render.model.MeshPool.PoolEntry;
+import dreampool.render.texture.Texture;
 
 public class Font {
 	public ByteBuffer bitmap;
@@ -37,9 +41,10 @@ public class Font {
 
 	private List<Float> vertices = new ArrayList<>();
 
-	public static BasicShader shader = new BasicShader("/shaders/ui.vert", "/shaders/font.frag");
 	static int VAO;
 	static int VBO;
+
+	public Mesh mesh = new Mesh();
 
 	public Font(String path) {
 		ByteBuffer ttf = FileUtils.resourceToByteBuffer(path, 512 * 1024);
@@ -77,6 +82,8 @@ public class Font {
 		// STBImageWrite.stbi_write_png("fontAtlas.png", 512, 512, 1, bitmap, 512);
 
 		setupVAOandVBO();
+		mesh = new Mesh();
+		mesh.entry = new PoolEntry(VBO, VAO, -2);
 	}
 
 	public void renderText(String text, Vector3f position, Vector4f color, float size) {
@@ -134,39 +141,20 @@ public class Font {
 				localPos.x = position.x;
 			}
 		}
-
-		int vertexCount = vertices.size() / 9;
-
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		shader.use();
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
-
-		shader.setInt("uTexture", 0);
-		if (altProj == null) {
-			shader.setMat4("projection", new Matrix4f().ortho(0, Application.width, 0, Application.height, -1, 1));
-		} else {
-			shader.setMat4("projection", altProj);
-		}
-
-		GL30.glBindVertexArray(VAO);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
 		float[] verticeArray = new float[vertices.size()];
 		for (int i = 0; i < vertices.size(); i++) {
 			verticeArray[i] = vertices.get(i);
 		}
-		FloatBuffer fb = BufferUtils.createFloatBuffer(verticeArray.length);
-		fb.put(verticeArray).flip();
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, fb);
+		mesh.entry.vertices = verticeArray;
 
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+		mesh.textures.add(new Texture(texture));
+		RenderPipeline.Singleton.submit(new RenderCommand(RenderStage.UI, mesh, null, null));
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
-	static void setupVAOandVBO() {
+	void setupVAOandVBO() {
 		VAO = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(VAO);
 
@@ -180,6 +168,8 @@ public class Font {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
 		GL20.glEnableVertexAttribArray(2);
+
+		mesh.entry = new PoolEntry(VAO, VBO, -2);
 
 		GL30.glBindVertexArray(0);
 	}

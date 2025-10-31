@@ -1,6 +1,5 @@
 package dreampool.ui;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,14 +9,17 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import dreampool.Application;
+import dreampool.render.RenderCommand;
+import dreampool.render.RenderPipeline;
+import dreampool.render.RenderStage;
+import dreampool.render.model.Mesh;
+import dreampool.render.model.MeshPool.PoolEntry;
 import dreampool.render.shader.BasicShader;
 import dreampool.render.texture.Texture;
 
@@ -36,6 +38,8 @@ public class UIImage {
 	private Vector3f oldPosition = new Vector3f();
 	private Vector4f oldColor = new Vector4f();
 	private Vector2f oldSize = new Vector2f(0, 0);
+
+	private Mesh mesh = new Mesh();
 
 	public UIImage(String path) {
 		synchronized (textureCache) {
@@ -90,38 +94,20 @@ public class UIImage {
 
 			vertset = true;
 		}
-
-		int vertexCount = vertices.size() / 9;
-
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		shader.use();
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.ID);
-
-		shader.setInt("uTexture", 0);
-		if (altProj == null) {
-			shader.setMat4("projection", new Matrix4f().ortho(0, Application.width, 0, Application.height, -1, 1));
-		} else {
-			shader.setMat4("projection", altProj);
-		}
-
-		GL30.glBindVertexArray(VAO);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
 		float[] verticeArray = new float[vertices.size()];
 		for (int i = 0; i < vertices.size(); i++) {
 			verticeArray[i] = vertices.get(i);
 		}
-		FloatBuffer fb = BufferUtils.createFloatBuffer(verticeArray.length);
-		fb.put(verticeArray).flip();
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, fb);
+		mesh.entry.vertices = verticeArray;
 
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+		mesh.textures.add(texture);
+		RenderPipeline.Singleton.submit(new RenderCommand(RenderStage.UI, mesh, null, null));
+
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
-	static void setupVAOandVBO() {
+	void setupVAOandVBO() {
 		VAO = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(VAO);
 
@@ -135,6 +121,8 @@ public class UIImage {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
 		GL20.glEnableVertexAttribArray(2);
+
+		mesh.entry = new PoolEntry(VAO, VBO, -1);
 
 		GL30.glBindVertexArray(0);
 	}

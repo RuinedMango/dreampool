@@ -25,6 +25,8 @@ public class GeometryPass implements RenderPass {
 			"/shaders/main.tes");
 	Vector2f lightDir;
 
+	int lastRendered;
+
 	public GeometryPass() {
 		mainShader.use();
 		mainShader.setInt("texture1", 0);
@@ -51,9 +53,12 @@ public class GeometryPass implements RenderPass {
 		mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 		mainShader.setMat4("view", Camera.Singleton.matrix);
 		for (RenderCommand cmd : cmds) {
-			GL30.glBindVertexArray(cmd.mesh.entry.VAO);
-			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
-			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, cmd.mesh.entry.EBO);
+			if (this.lastRendered != cmd.sortKey) {
+				GL30.glBindVertexArray(cmd.mesh.entry.VAO);
+				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
+				GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, cmd.mesh.entry.EBO);
+				this.lastRendered = cmd.sortKey;
+			}
 			mainShader.setMat4("model", cmd.modelMat);
 			mainShader.setBool("flatlight", cmd.mesh.flat);
 			if (Mesh.hitDebug) {
