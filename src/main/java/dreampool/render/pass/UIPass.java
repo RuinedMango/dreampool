@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-import dreampool.Application;
+import dreampool.Window;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderStage;
 import dreampool.render.camera.Camera;
@@ -30,7 +30,8 @@ public class UIPass implements RenderPass {
 		shader.use();
 
 		shader.setInt("uTexture", 0);
-		shader.setMat4("projection", new Matrix4f().ortho(0, Application.width, 0, Application.height, -1, 1));
+		shader.setMat4("projection",
+				new Matrix4f().ortho(0, Window.Singleton.width, 0, Window.Singleton.height, -1, 1));
 		for (RenderCommand cmd : cmds) {
 			GL30.glBindVertexArray(cmd.mesh.entry.VAO);
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
@@ -60,6 +61,9 @@ public class UIPass implements RenderPass {
 	public void end() {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
 	}
 
 	@Override

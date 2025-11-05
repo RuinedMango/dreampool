@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import dreampool.Application;
+import dreampool.Window;
 import dreampool.render.camera.Camera;
 import dreampool.render.pass.RenderPass;
 
@@ -56,7 +57,7 @@ public class RenderPipeline {
 	}
 
 	public void endFrame() {
-		GLFW.glfwSwapBuffers(Application.window);
+		GLFW.glfwSwapBuffers(Window.Singleton.ID);
 		GLFW.glfwPollEvents();
 	}
 

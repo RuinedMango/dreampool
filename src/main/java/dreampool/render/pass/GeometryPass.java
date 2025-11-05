@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL40;
 
 import dreampool.Application;
+import dreampool.Window;
 import dreampool.core.Time;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderStage;
@@ -25,7 +26,7 @@ public class GeometryPass implements RenderPass {
 			"/shaders/main.tes");
 	Vector2f lightDir;
 
-	int lastRendered;
+	int lastRendered = 0;
 
 	public GeometryPass() {
 		mainShader.use();
@@ -43,8 +44,8 @@ public class GeometryPass implements RenderPass {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		mainShader.use();
 		mainShader.setMat4("projection", Application.projection);
-		mainShader.setVec2("targetResolution", (int) (Application.width / Application.resDivisor) / 2,
-				(int) (Application.height / Application.resDivisor) / 2);
+		mainShader.setVec2("targetResolution", (int) (Window.Singleton.width / Application.resDivisor) / 2,
+				(int) (Window.Singleton.height / Application.resDivisor) / 2);
 
 		lightDir.add(new Vector2f(75 * Time.deltaTime, 0));
 
@@ -71,11 +72,14 @@ public class GeometryPass implements RenderPass {
 
 			GL11.glDrawArrays(GL40.GL_PATCHES, 0, cmd.mesh.entry.vertices.length / 8);
 		}
+		this.lastRendered = 0;
 	}
 
 	@Override
 	public void end() {
-		// TODO Auto-generated method stub
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
 
 	}
 

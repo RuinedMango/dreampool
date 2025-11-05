@@ -3,17 +3,19 @@ package dreampool.example.scenes;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import dreampool.Application;
+import dreampool.Window;
 import dreampool.audio.NoiseListener;
 import dreampool.core.Thing;
 import dreampool.core.Time;
 import dreampool.core.scene.Scene;
+import dreampool.physics.bounds.AABBCollider;
 import dreampool.physics.bounds.SphereCollider;
 import dreampool.render.camera.Camera;
 import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 import dreampool.ui.Font;
+import dreampool.ui.UIButton;
 import dreampool.ui.UIImage;
 import dreampool.ui.parts.Image;
 import dreampool.ui.parts.Text;
@@ -30,11 +32,11 @@ public class ExampleScene {
 		player.transform.position = new Vector3f(4, 0, 1);
 		player.transform.rotation = new Vector3f(-90, 0, 0);
 
-		for (int i = 0; i < 100; i++) {
-			for (int j = 0; j < 100; j++) {
-				Thing ball = new Thing("ball" + i + j);
-				ball.addPart(i % 2 >= 1 ? new Mesh("/models/bunny.obj", true) : new Mesh("/models/Sphere.obj", true));
-				ball.addPart(new SphereCollider(true));
+		for (int i = 0; i < 50; i++) {
+			for (int j = 0; j < 50; j++) {
+				Thing ball = new Thing((i % 2 >= 1 ? "bunny" : "ball") + i + j);
+				ball.addPart(i % 2 >= 1 ? new Mesh("/models/bunny.obj", true) : new Mesh("/models/Sphere.obj", false));
+				ball.addPart(i % 2 >= 1 ? new AABBCollider(true) : new SphereCollider(true));
 				ball.addPart(new Texture("/images/white.png"));
 				ball.addPart(new Texture("/images/white.png", 1));
 				ball.addPart(new Rotator());
@@ -52,9 +54,10 @@ public class ExampleScene {
 		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 190, 0, 75, 1, arial);
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
+		fps.addPart(new UIButton(10, 10, 70, 70, null));
 		Thing crosshair = new Thing("crosshair");
-		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Application.height / 2f),
-				(Application.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
+		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Window.Singleton.height / 2f),
+				(Window.Singleton.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
 		crosshair.addPart(crossimage);
 		crosshair.addPart(new Crosshair(crossimage));
 		scene.addThing(player);

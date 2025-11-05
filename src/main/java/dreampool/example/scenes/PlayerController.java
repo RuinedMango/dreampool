@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
+import dreampool.Window;
 import dreampool.IO.DeviceManager;
 import dreampool.core.Part;
 import dreampool.core.Thing;
@@ -29,6 +30,7 @@ public class PlayerController extends Part {
 	public float baseSpeed = 2.5f;
 	public float sprintMultiplier = 4;
 	private float speedHolder;
+	private boolean mouseCaptured = true;
 	private boolean rightPressable = true;
 	private boolean leftPressable = true;
 
@@ -40,13 +42,20 @@ public class PlayerController extends Part {
 	public void Start() {
 		DeviceManager.Singleton.setCursorPosCallback(myMouseCallback());
 		cam = thing.getPart(Camera.class);
-
+		GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 	}
 
 	@Override
 	public void Update() {
 		speedHolder = baseSpeed;
 		processMovement(DeviceManager.Singleton.window);
+		if (GLFW.glfwGetKey(Window.Singleton.ID, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
+			if (!mouseCaptured) {
+				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+			} else {
+				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+			}
+		}
 		// TODO eventually do something cool
 		if (leftPressable && GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
 				GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {

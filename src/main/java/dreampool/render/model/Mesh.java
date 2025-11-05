@@ -23,6 +23,9 @@ public class Mesh extends Part {
 	public MeshPool.PoolEntry entry;
 	public List<Texture> textures = new ArrayList<>();
 
+	private Matrix4f model = new Matrix4f();
+	private Quaternionf rot = new Quaternionf();
+
 	public Mesh(String path, boolean flat) {
 		this.flat = flat;
 
@@ -35,11 +38,10 @@ public class Mesh extends Part {
 	@Override
 	public void Update() {
 		if (inFrustum) {
-			Matrix4f model = new Matrix4f();
-			model.translate(transform.position);
-			model.rotate(new Quaternionf().rotationXYZ((float) Math.toRadians(transform.rotation.x),
-					(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)));
-			model.scale(transform.size);
+			model.identity().translate(transform.position)
+					.rotate(rot.identity().rotationXYZ((float) Math.toRadians(transform.rotation.x),
+							(float) Math.toRadians(transform.rotation.y), (float) Math.toRadians(transform.rotation.z)))
+					.scale(transform.size);
 			RenderPipeline.Singleton.submit(new RenderCommand(RenderStage.GEOMETRY, this, textures, model));
 			// GL46.glDrawElements(GL46.GL_TRIANGLES, entry.indices.length,
 			// GL46.GL_UNSIGNED_INT, 0);
