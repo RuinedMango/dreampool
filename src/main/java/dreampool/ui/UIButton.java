@@ -28,13 +28,13 @@ public class UIButton extends Part {
 	@Override
 	public void Update() {
 		DoubleBuffer mouseX = BufferUtils.createDoubleBuffer(1);
-		DoubleBuffer mouseY = BufferUtils.createDoubleBuffer(1);
-		GLFW.glfwGetCursorPos(Window.Singleton.ID, mouseX, mouseY);
+		DoubleBuffer mouseY_tmp = BufferUtils.createDoubleBuffer(1);
+		GLFW.glfwGetCursorPos(Window.Singleton.ID, mouseX, mouseY_tmp);
+		double mouseY = Window.Singleton.height - mouseY_tmp.get(0);
 
-		System.out.print("" + mouseX.get(0) + ":" + mouseY.get(0));
+		System.out.print("" + mouseX.get(0) + ":" + mouseY);
 
-		boolean insideBound = mouseX.get(0) >= x && mouseX.get(0) <= x + w && mouseY.get(0) >= y
-				&& mouseY.get(0) <= y + h;
+		boolean insideBound = mouseX.get(0) >= x && mouseX.get(0) <= x + w && mouseY >= y && mouseY <= y + h;
 
 		System.out.println(":" + insideBound);
 	}

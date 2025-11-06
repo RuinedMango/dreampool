@@ -24,7 +24,7 @@ public class PostPass implements RenderPass {
 
 	public PostPass() {
 		post.use();
-		post.setInt("levels", 16);
+		post.setInt("levels", 32);
 		post.setInt("screenTexture", 0);
 		quadVAO = GL30.glGenVertexArrays();
 		quadVBO = GL15.glGenBuffers();

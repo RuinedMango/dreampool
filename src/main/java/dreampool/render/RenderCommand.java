@@ -12,6 +12,7 @@ public class RenderCommand {
 	public Matrix4f modelMat;
 	public List<Texture> textures;
 	public RenderStage target;
+	public String specialKey;
 
 	public int sortKey;
 
@@ -20,6 +21,23 @@ public class RenderCommand {
 		this.mesh = mesh;
 		this.modelMat = modelMat;
 		this.textures = textures;
-		sortKey = mesh.entry.vertices.length;
+		if (mesh != null) {
+			sortKey = mesh.entry.vertices.length;
+		} else {
+			sortKey = 0;
+		}
+	}
+
+	public RenderCommand(RenderStage target, Mesh mesh, List<Texture> textures, Matrix4f modelMat, String specialKey) {
+		this.target = target;
+		this.mesh = mesh;
+		this.modelMat = modelMat;
+		this.textures = textures;
+		if (mesh != null) {
+			sortKey = mesh.entry.vertices.length;
+		} else {
+			sortKey = 0;
+		}
+		this.specialKey = specialKey;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -54,23 +55,33 @@ public class GeometryPass implements RenderPass {
 		mainShader.setVec3("diffuseColor", new Vector3f(1.0f, 1.0f, 1.0f));
 		mainShader.setMat4("view", Camera.Singleton.matrix);
 		for (RenderCommand cmd : cmds) {
-			if (this.lastRendered != cmd.sortKey) {
-				GL30.glBindVertexArray(cmd.mesh.entry.VAO);
-				GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
-				GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, cmd.mesh.entry.EBO);
-				this.lastRendered = cmd.sortKey;
-			}
-			mainShader.setMat4("model", cmd.modelMat);
-			mainShader.setBool("flatlight", cmd.mesh.flat);
-			if (Mesh.hitDebug) {
-				mainShader.setBool("hit", cmd.mesh.hit);
-			}
-			for (Texture texture : cmd.textures) {
-				GL13.glActiveTexture(GL13.GL_TEXTURE0 + texture.unit);
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.ID);
-			}
+			if (cmd.specialKey != null && cmd.specialKey.equalsIgnoreCase("fog")) {
+				Vector4f color = new Vector4f();
+				cmd.modelMat.getColumn(0, color);
+				Vector4f packedDepth = new Vector4f();
+				cmd.modelMat.getColumn(1, packedDepth);
+				mainShader.setVec4("fogColor", color);
+				mainShader.setFloat("fogDepthMax", packedDepth.x);
+				mainShader.setFloat("fogDepthMin", packedDepth.y);
+			} else {
+				if (this.lastRendered != cmd.sortKey) {
+					GL30.glBindVertexArray(cmd.mesh.entry.VAO);
+					GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
+					GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, cmd.mesh.entry.EBO);
+					this.lastRendered = cmd.sortKey;
+				}
+				mainShader.setMat4("model", cmd.modelMat);
+				mainShader.setBool("flatlight", cmd.mesh.flat);
+				if (Mesh.hitDebug) {
+					mainShader.setBool("hit", cmd.mesh.hit);
+				}
+				for (Texture texture : cmd.textures) {
+					GL13.glActiveTexture(GL13.GL_TEXTURE0 + texture.unit);
+					GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.ID);
+				}
 
-			GL11.glDrawArrays(GL40.GL_PATCHES, 0, cmd.mesh.entry.vertices.length / 8);
+				GL11.glDrawArrays(GL40.GL_PATCHES, 0, cmd.mesh.entry.vertices.length / 8);
+			}
 		}
 		this.lastRendered = 0;
 	}

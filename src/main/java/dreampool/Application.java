@@ -73,8 +73,7 @@ public class Application {
 
 		SceneManager manager = new SceneManager(new ExampleScene().generateScene());
 
-		@SuppressWarnings("unused")
-		DeviceManager device = new DeviceManager(Window.Singleton.ID);
+		new DeviceManager(Window.Singleton.ID);
 
 		Time time = new Time();
 

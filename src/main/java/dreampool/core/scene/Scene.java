@@ -6,11 +6,9 @@ import java.util.List;
 
 import dreampool.core.Thing;
 import dreampool.physics.bounds.Collider;
-import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 
 public class Scene {
-	public Fog fog;
 	public String name;
 	public List<Thing> things = new ArrayList<>();
 	public List<Thing> toAdd = new ArrayList<>();
@@ -38,7 +36,6 @@ public class Scene {
 			things.removeAll(toRemove);
 			toRemove.clear();
 		}
-		fog.Update();
 		things.sort(Comparator.comparingInt(t -> t.renderOrder));
 		for (Thing thing : things) {
 			if (!thing.startedOnce) {
@@ -50,10 +47,6 @@ public class Scene {
 	}
 
 	public void Start() {
-		if (fog == null) {
-			fog = new Fog();
-		}
-		fog.Start();
 		if (!toAdd.isEmpty()) {
 			things.addAll(toAdd);
 			toAdd.clear();

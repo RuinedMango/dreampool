@@ -23,7 +23,8 @@ import dreampool.ui.parts.Text;
 public class ExampleScene {
 	public Scene generateScene() {
 		Scene scene = new Scene("example");
-		scene.fog = new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f);
+		Thing fogThing = new Thing("fog");
+		fogThing.addPart(new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f));
 		Font arial = new Font("/fonts/Oswald-Regular.ttf");
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
@@ -54,12 +55,13 @@ public class ExampleScene {
 		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 190, 0, 75, 1, arial);
 		fps.addPart(text);
 		fps.addPart(new FPSDisplay(text));
-		fps.addPart(new UIButton(10, 10, 70, 70, null));
+		fps.addPart(new UIButton(10, 700, 70, 70, null));
 		Thing crosshair = new Thing("crosshair");
 		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Window.Singleton.height / 2f),
 				(Window.Singleton.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
 		crosshair.addPart(crossimage);
 		crosshair.addPart(new Crosshair(crossimage));
+		scene.addThing(fogThing);
 		scene.addThing(player);
 		scene.addThing(fps);
 		scene.addThing(crosshair);
