@@ -10,8 +10,8 @@ import org.lwjgl.system.MemoryStack;
 public class Window {
 	public static Window Singleton;
 	public long ID;
-	public int height = 0;
-	public int width = 0;
+	public int height = 10;
+	public int width = 10;
 	private IntBuffer w;
 	private IntBuffer h;
 
@@ -47,6 +47,10 @@ public class Window {
 		w.clear();
 		h.clear();
 		GLFW.glfwTerminate();
+	}
+
+	public boolean shouldClose() {
+		return GLFW.glfwWindowShouldClose(ID);
 	}
 
 }

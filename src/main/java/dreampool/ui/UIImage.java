@@ -20,7 +20,6 @@ import dreampool.render.RenderPipeline;
 import dreampool.render.RenderStage;
 import dreampool.render.model.Mesh;
 import dreampool.render.model.MeshPool.PoolEntry;
-import dreampool.render.shader.BasicShader;
 import dreampool.render.texture.Texture;
 
 public class UIImage {
@@ -31,7 +30,6 @@ public class UIImage {
 	private List<Float> vertices = new ArrayList<>();
 	private boolean vertset = false;
 
-	public static BasicShader shader = new BasicShader("/shaders/ui.vert", "/shaders/ui.frag");
 	static int VAO;
 	static int VBO;
 

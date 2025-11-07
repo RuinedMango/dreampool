@@ -8,7 +8,6 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL40;
 
 import dreampool.IO.DeviceManager;
 import dreampool.audio.AudioDevice;
@@ -32,14 +31,14 @@ public class Application {
 	public static int FBOtex;
 
 	public static void main(String[] args) {
-		new Window();
+		Window window = new Window();
 
 		GL.createCapabilities();
 
 		GL11.glViewport(0, 0, 800, 600);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
-		GLFW.glfwSetFramebufferSizeCallback(Window.Singleton.ID, myBufferCallback());
+		GLFW.glfwSetFramebufferSizeCallback(window.ID, myBufferCallback());
 
 		AudioDevice sound = new AudioDevice();
 		// AssetLoader assetLoader = new AssetLoader();
@@ -54,16 +53,16 @@ public class Application {
 
 		FBOtex = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, FBOtex);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGB16F, (int) (Window.Singleton.width / resDivisor),
-				(int) (Window.Singleton.height / resDivisor), 0, GL11.GL_RGB, GL11.GL_FLOAT, NULL);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGB16F, (int) (window.width / resDivisor),
+				(int) (window.height / resDivisor), 0, GL11.GL_RGB, GL11.GL_FLOAT, NULL);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, FBOtex, 0);
 
 		RBO = GL30.glGenRenderbuffers();
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, RBO);
-		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH24_STENCIL8,
-				(int) (Window.Singleton.width / resDivisor), (int) (Window.Singleton.height / resDivisor));
+		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH24_STENCIL8, (int) (window.width / resDivisor),
+				(int) (window.height / resDivisor));
 		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER,
 				RBO);
 		if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE) {
@@ -73,35 +72,25 @@ public class Application {
 
 		SceneManager manager = new SceneManager(new ExampleScene().generateScene());
 
-		new DeviceManager(Window.Singleton.ID);
+		new DeviceManager(window.ID);
 
 		Time time = new Time();
 
 		manager.currentScene.Start();
 
-		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 3);
-		GL11.glDisable(GL11.GL_DITHER);
-		GL11.glDisable(GL11.GL_POINT_SMOOTH);
-		GL11.glDisable(GL11.GL_LINE_SMOOTH);
-		GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
-		GL11.glHint(GL11.GL_POINT_SMOOTH, GL11.GL_DONT_CARE);
-		GL11.glHint(GL11.GL_LINE_SMOOTH, GL11.GL_DONT_CARE);
-		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
-
 		if (wireframe) {
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		}
 
-		while (!GLFW.glfwWindowShouldClose(Window.Singleton.ID)) {
+		while (!window.shouldClose()) {
 			time.update();
 			renderPipeline.beginFrame();
-			Window.Singleton.update();
+			window.update();
 
-			projection = new Matrix4f().perspective(70.0f,
-					(Window.Singleton.width / resDivisor) / (Window.Singleton.height / resDivisor), 0.1f, 50.0f);
+			projection = new Matrix4f().perspective(70.0f, (window.width / resDivisor) / (window.height / resDivisor),
+					0.1f, 50.0f);
 
-			GL11.glViewport(0, 0, (int) (Window.Singleton.width / resDivisor),
-					(int) (Window.Singleton.height / resDivisor));
+			GL11.glViewport(0, 0, (int) (window.width / resDivisor), (int) (window.height / resDivisor));
 			manager.currentScene.Update();
 			renderPipeline.execute();
 
@@ -116,7 +105,7 @@ public class Application {
 		GL30.glDeleteFramebuffers(FBO);
 		GL30.glDeleteRenderbuffers(RBO);
 
-		Window.Singleton.destroy();
+		window.destroy();
 		return;
 	}
 

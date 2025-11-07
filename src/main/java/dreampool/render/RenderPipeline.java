@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 
 import dreampool.Application;
 import dreampool.Window;
@@ -24,6 +25,14 @@ public class RenderPipeline {
 		} else {
 			Singleton = this;
 		}
+		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 3);
+		GL11.glDisable(GL11.GL_DITHER);
+		GL11.glDisable(GL11.GL_POINT_SMOOTH);
+		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+		GL11.glHint(GL11.GL_POINT_SMOOTH, GL11.GL_DONT_CARE);
+		GL11.glHint(GL11.GL_LINE_SMOOTH, GL11.GL_DONT_CARE);
+		GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
 	}
 
 	public void beginFrame() {
