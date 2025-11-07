@@ -13,7 +13,7 @@ import dreampool.IO.DeviceManager;
 import dreampool.audio.AudioDevice;
 import dreampool.core.Time;
 import dreampool.core.scene.SceneManager;
-import dreampool.example.scenes.ExampleScene;
+import dreampool.example.scenes.ExampleSceneTitle;
 import dreampool.render.RenderPipeline;
 import dreampool.render.model.MeshPool;
 import dreampool.render.pass.GeometryPass;
@@ -70,7 +70,7 @@ public class Application {
 		}
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
-		SceneManager manager = new SceneManager(new ExampleScene().generateScene());
+		SceneManager manager = new SceneManager(new ExampleSceneTitle().generateScene());
 
 		new DeviceManager(window.ID);
 

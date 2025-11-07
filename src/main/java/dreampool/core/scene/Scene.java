@@ -84,4 +84,12 @@ public class Scene {
 		}
 		return meshes;
 	}
+
+	public void destroy() {
+		toAdd.clear();
+		toRemove.clear();
+		for (Thing thing : this.things) {
+			thing.Destroy();
+		}
+	}
 }

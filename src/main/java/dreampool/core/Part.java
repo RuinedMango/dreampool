@@ -16,4 +16,7 @@ public class Part {
 
 	public void Update() {
 	}
+
+	public void Destroy() {
+	}
 }

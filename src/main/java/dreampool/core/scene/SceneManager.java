@@ -15,6 +15,8 @@ public class SceneManager {
 	}
 
 	public void setScene(Scene scene) {
+		currentScene.destroy();
 		currentScene = scene;
+		currentScene.Start();
 	}
 }

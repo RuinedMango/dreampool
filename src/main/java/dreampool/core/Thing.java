@@ -56,6 +56,12 @@ public class Thing {
 		}
 	}
 
+	public void Destroy() {
+		for (Part part : parts) {
+			part.Destroy();
+		}
+	}
+
 	public void addPart(Part part) {
 		part.thing = this;
 		part.transform = this.transform;

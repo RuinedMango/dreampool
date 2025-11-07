@@ -17,15 +17,15 @@ public class Camera extends Part {
 	public Vector3f right = new Vector3f();
 
 	public Camera() {
+	}
+
+	@Override
+	public void Start() {
 		if (Singleton == null) {
 			Singleton = this;
 		} else {
 			System.out.println("Camera already exists");
 		}
-	}
-
-	@Override
-	public void Start() {
 		this.front = transform.rotation.normalize();
 	}
 
@@ -41,5 +41,10 @@ public class Camera extends Part {
 		projViewMatrix.mul(matrix);
 
 		frustum.set(projViewMatrix);
+	}
+
+	@Override
+	public void Destroy() {
+		Singleton = null;
 	}
 }

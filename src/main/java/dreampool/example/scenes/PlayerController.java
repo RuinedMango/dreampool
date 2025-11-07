@@ -52,8 +52,10 @@ public class PlayerController extends Part {
 		if (GLFW.glfwGetKey(Window.Singleton.ID, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
 			if (!mouseCaptured) {
 				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+				mouseCaptured = true;
 			} else {
 				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+				mouseCaptured = false;
 			}
 		}
 		// TODO eventually do something cool
