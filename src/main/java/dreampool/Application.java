@@ -70,7 +70,8 @@ public class Application {
 		}
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
-		SceneManager manager = new SceneManager(new ExampleSceneTitle().generateScene());
+		new ExampleSceneTitle();
+		SceneManager manager = new SceneManager(ExampleSceneTitle.generateScene());
 
 		new DeviceManager(window.ID);
 

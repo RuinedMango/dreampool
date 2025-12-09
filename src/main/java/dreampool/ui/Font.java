@@ -35,11 +35,11 @@ public class Font {
 
 	private int texture;
 
-	private final float[] scale = { 64.0f, 14.0f };
+	private final float[] scale = { 100.0f, 28.0f };
 	private STBTTPackedchar.Buffer chardata;
 	private STBTTAlignedQuad.Buffer alignedQuads;
 
-	private List<Float> vertices = new ArrayList<>();
+	public List<Float> vertices = new ArrayList<>();
 
 	static int VAO;
 	static int VBO;

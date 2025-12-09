@@ -25,9 +25,11 @@ public class Image extends Part {
 
 	@Override
 	public void Update() {
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		if (enabled) {
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		uiTexture.renderQuad(position, color, size);
+			uiTexture.renderQuad(position, color, size);
+		}
 	}
 }

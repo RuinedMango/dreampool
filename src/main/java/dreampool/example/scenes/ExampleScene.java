@@ -15,8 +15,8 @@ import dreampool.render.fog.Fog;
 import dreampool.render.model.Mesh;
 import dreampool.render.texture.Texture;
 import dreampool.ui.Font;
-import dreampool.ui.UIButton;
 import dreampool.ui.UIImage;
+import dreampool.ui.parts.Dropdown;
 import dreampool.ui.parts.Image;
 import dreampool.ui.parts.Text;
 
@@ -26,6 +26,7 @@ public class ExampleScene {
 		Thing fogThing = new Thing("fog");
 		fogThing.addPart(new Fog(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 10.0f, 50.0f));
 		Font arial = new Font("/fonts/Oswald-Regular.ttf");
+		Font shade = new Font("/fonts/ShadeBlue.ttf");
 		Thing player = new Thing("player");
 		player.addPart(new Camera());
 		player.addPart(new NoiseListener());
@@ -60,20 +61,18 @@ public class ExampleScene {
 				(Window.Singleton.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
 		crosshair.addPart(crossimage);
 		crosshair.addPart(new Crosshair(crossimage));
-
-		Thing button = new Thing("button");
-		button.addPart(new Image(new UIImage("/images/crosshair.png"), 10, 700, 50f, 50f, 255, 255, 255, 1.0f));
-		button.addPart(new UIButton(new Runnable() {
-			@Override
-			public void run() {
-				System.out.println("Clicked");
-			}
-		}));
+		Thing dropdown = new Thing("drop");
+		Dropdown dropart = new Dropdown(400, 400, 120, 20, 255, 255, 255, 1);
+		dropdown.addPart(dropart);
+		Text droptext = new Text("Cock", 32, 0, 0, 0, 0, 0, 1, shade);
+		dropart.addChild(droptext);
+		dropart.addChild(new Image(new UIImage("/images/crosshair.png"), 0, 0, 50f, 50f, 255, 255, 255, 1.0f));
+		dropart.addChild(new Image(new UIImage("/images/crosshair.png"), 0, 0, 50f, 50f, 255, 255, 255, 1.0f));
 		scene.addThing(fogThing);
 		scene.addThing(player);
 		scene.addThing(fps);
 		scene.addThing(crosshair);
-		scene.addThing(button);
+		scene.addThing(dropdown);
 		return scene;
 	}
 }

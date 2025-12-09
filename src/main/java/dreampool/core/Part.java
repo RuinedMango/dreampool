@@ -3,6 +3,7 @@ package dreampool.core;
 import dreampool.core.transform.Transform;
 
 public class Part {
+	public boolean enabled = true;
 	public Integer desiredRenderOrder = null;
 	public Class<? extends Part>[] doBefore = null;
 	public Class<? extends Part>[] doAfter = null;
