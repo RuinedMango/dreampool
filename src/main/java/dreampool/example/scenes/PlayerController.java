@@ -8,8 +8,8 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
-import dreampool.Window;
-import dreampool.IO.DeviceManager;
+import dreampool.WindowSystem;
+import dreampool.IO.InputManager;
 import dreampool.core.Part;
 import dreampool.core.Thing;
 import dreampool.core.Time;
@@ -40,41 +40,41 @@ public class PlayerController extends Part {
 
 	@Override
 	public void Start() {
-		DeviceManager.Singleton.setCursorPosCallback(myMouseCallback());
+		InputManager.Singleton.setCursorPosCallback(myMouseCallback());
 		cam = thing.getPart(Camera.class);
-		GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+		GLFW.glfwSetInputMode(WindowSystem.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 	}
 
 	@Override
 	public void Update() {
 		speedHolder = baseSpeed;
-		processMovement(DeviceManager.Singleton.window);
-		if (GLFW.glfwGetKey(Window.Singleton.ID, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
+		processMovement(InputManager.Singleton.window);
+		if (GLFW.glfwGetKey(WindowSystem.Singleton.ID, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
 			if (!mouseCaptured) {
-				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+				GLFW.glfwSetInputMode(WindowSystem.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 				mouseCaptured = true;
 			} else {
-				GLFW.glfwSetInputMode(Window.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+				GLFW.glfwSetInputMode(WindowSystem.Singleton.ID, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
 				mouseCaptured = false;
 			}
 		}
 		// TODO eventually do something cool
-		if (leftPressable && GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+		if (leftPressable && GLFW.glfwGetMouseButton(InputManager.Singleton.window,
 				GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
 			colliders = thing.scene.getColliders();
 			fireRayFromCamera();
 			leftPressable = false;
 		}
-		if (rightPressable && GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+		if (rightPressable && GLFW.glfwGetMouseButton(InputManager.Singleton.window,
 				GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
 			colliders = thing.scene.getColliders();
 			fireDestructionRayFromCamera();
 			rightPressable = false;
 		}
-		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_RELEASE) {
+		if (GLFW.glfwGetMouseButton(InputManager.Singleton.window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_RELEASE) {
 			leftPressable = true;
 		}
-		if (GLFW.glfwGetMouseButton(DeviceManager.Singleton.window,
+		if (GLFW.glfwGetMouseButton(InputManager.Singleton.window,
 				GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_RELEASE) {
 			rightPressable = true;
 		}

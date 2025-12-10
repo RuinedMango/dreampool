@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import dreampool.Application;
-import dreampool.Window;
+import dreampool.WindowSystem;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderStage;
 import dreampool.render.camera.Camera;
@@ -53,7 +53,7 @@ public class PostPass implements RenderPass {
 		GL15.glActiveTexture(GL13.GL_TEXTURE0);
 		GL15.glBindTexture(GL13.GL_TEXTURE_2D, 0);
 		post.use();
-		GL11.glViewport(0, 0, Window.Singleton.width, Window.Singleton.height);
+		GL11.glViewport(0, 0, WindowSystem.Singleton.width, WindowSystem.Singleton.height);
 		GL30.glBindVertexArray(quadVAO);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, quadVBO);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, quadVertices, GL15.GL_STATIC_DRAW);

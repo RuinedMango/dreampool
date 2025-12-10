@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-import dreampool.Window;
+import dreampool.WindowSystem;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderStage;
 import dreampool.render.camera.Camera;
@@ -31,7 +31,7 @@ public class UIPass implements RenderPass {
 
 		shader.setInt("uTexture", 0);
 		shader.setMat4("projection",
-				new Matrix4f().ortho(0, Window.Singleton.width, 0, Window.Singleton.height, -1, 1));
+				new Matrix4f().ortho(0, WindowSystem.Singleton.width, 0, WindowSystem.Singleton.height, -1, 1));
 		for (RenderCommand cmd : cmds) {
 			GL30.glBindVertexArray(cmd.mesh.entry.VAO);
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cmd.mesh.entry.VBO);
@@ -45,15 +45,21 @@ public class UIPass implements RenderPass {
 			}
 			if (cmd.mesh.entry.EBO == -2) {
 				shader.setBool("uGrayscale", true);
+				shader.setBool("uFlat", false);
 			} else if (cmd.mesh.entry.EBO == -1) {
 				shader.setBool("uGrayscale", false);
+				shader.setBool("uFlat", false);
+			} else if (cmd.mesh.entry.EBO == -3) {
+				shader.setBool("uFlat", true);
 			}
 
-			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cmd.mesh.entry.vertices.length / 8);
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cmd.mesh.entry.vertices.length / 9);
 			FloatBuffer zeroBuffer = BufferUtils.createFloatBuffer(1024 * 1024 / 4);
 			zeroBuffer.put(new float[1024 * 1024 / 4]).flip();
 
 			GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, zeroBuffer);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		}
 	}
 

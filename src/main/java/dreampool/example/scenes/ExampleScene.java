@@ -3,10 +3,9 @@ package dreampool.example.scenes;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import dreampool.Window;
+import dreampool.WindowSystem;
 import dreampool.audio.NoiseListener;
 import dreampool.core.Thing;
-import dreampool.core.Time;
 import dreampool.core.scene.Scene;
 import dreampool.physics.bounds.AABBCollider;
 import dreampool.physics.bounds.SphereCollider;
@@ -53,18 +52,18 @@ public class ExampleScene {
 		}
 
 		Thing fps = new Thing("fps");
-		Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 190, 0, 75, 1, arial);
-		fps.addPart(text);
-		fps.addPart(new FPSDisplay(text));
+		// Text text = new Text("Fps: " + Time.fps, 32, 10, 700, 190, 0, 75, 1, arial);
+		// fps.addPart(text);
+		// fps.addPart(new FPSDisplay(text));
 		Thing crosshair = new Thing("crosshair");
-		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (Window.Singleton.height / 2f),
-				(Window.Singleton.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
+		Image crossimage = new Image(new UIImage("/images/crosshair.png"), (WindowSystem.Singleton.height / 2f),
+				(WindowSystem.Singleton.width / 2f), 50f, 50f, 255, 255, 255, 1.0f);
 		crosshair.addPart(crossimage);
 		crosshair.addPart(new Crosshair(crossimage));
 		Thing dropdown = new Thing("drop");
-		Dropdown dropart = new Dropdown(400, 400, 120, 20, 255, 255, 255, 1);
+		Dropdown dropart = new Dropdown(arial, "ballsack", 400, 400, 180, 30, 200, 200, 200, 1);
 		dropdown.addPart(dropart);
-		Text droptext = new Text("Cock", 32, 0, 0, 0, 0, 0, 1, shade);
+		Text droptext = new Text("Weener", 32, 0, 0, 0, 0, 0, 1, shade);
 		dropart.addChild(droptext);
 		dropart.addChild(new Image(new UIImage("/images/crosshair.png"), 0, 0, 50f, 50f, 255, 255, 255, 1.0f));
 		dropart.addChild(new Image(new UIImage("/images/crosshair.png"), 0, 0, 50f, 50f, 255, 255, 255, 1.0f));

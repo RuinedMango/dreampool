@@ -1,7 +1,7 @@
 package dreampool.example.scenes;
 
 import dreampool.Application;
-import dreampool.Window;
+import dreampool.WindowSystem;
 import dreampool.audio.NoiseListener;
 import dreampool.core.Thing;
 import dreampool.core.scene.Scene;
@@ -36,8 +36,8 @@ public class ExampleSceneTitle {
 		startext.addPart(new StartText(starttext));
 		Thing background = new Thing("Background");
 		Image iamge = new Image(new UIImage("/images/Courtyard King.jpg"), 0f, 0f,
-				(float) Window.Singleton.width * Application.resDivisor,
-				(float) Window.Singleton.height * Application.resDivisor, 255, 255, 255, 1);
+				(float) WindowSystem.Singleton.width * Application.resDivisor,
+				(float) WindowSystem.Singleton.height * Application.resDivisor, 255, 255, 255, 1);
 		background.addPart(iamge);
 		background.addPart(new MenuBackground(iamge));
 		scene.addThing(player);

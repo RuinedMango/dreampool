@@ -29,6 +29,7 @@ public class Text extends Part {
 
 	@Override
 	public void Start() {
+		font.renderText(text, new Vector3f(position, 0), color, size);
 		calculateMinMax();
 	}
 

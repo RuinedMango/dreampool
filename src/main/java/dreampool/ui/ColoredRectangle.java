@@ -1,22 +1,17 @@
-package dreampool.ui.parts;
+package dreampool.ui;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import dreampool.WindowSystem;
-import dreampool.IO.InputManager;
 import dreampool.core.Part;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderPipeline;
@@ -24,18 +19,13 @@ import dreampool.render.RenderStage;
 import dreampool.render.model.Mesh;
 import dreampool.render.model.MeshPool.PoolEntry;
 
-public class UIButton extends Part {
+public class ColoredRectangle extends Part {
 	public Vector2f position = new Vector2f();
 	public Vector2f size = new Vector2f();
 	public Vector4f color = new Vector4f();
 	private Vector2f oldPosition = new Vector2f();
 	private Vector4f oldColor = new Vector4f();
 	private Vector2f oldSize = new Vector2f(0, 0);
-	private Vector4f hoverColor = new Vector4f(0.5f, 0.5f, 0.5f, 1);
-	public Vector4f baseColor = new Vector4f(0, 0, 0, 1);
-	public boolean hovered;
-	public boolean clicked;
-	public Runnable callback;
 
 	private boolean renderable = false;
 
@@ -46,68 +36,26 @@ public class UIButton extends Part {
 	static int VAO;
 	static int VBO;
 
-	private Image image;
-
-	public UIButton(float x, float y, float w, float h, Runnable callback) {
+	public ColoredRectangle(float x, float y, float w, float h, float r, float g, float b, float a) {
 		position.x = x;
 		position.y = y;
 		size.x = w;
 		size.y = h;
-		this.callback = callback;
+		color.x = r / 255;
+		color.y = g / 255;
+		color.z = b / 255;
+		color.w = a;
 		setupVAOandVBO();
 		renderable = true;
 	}
 
-	public UIButton(Runnable callback) {
-		this.callback = callback;
-	}
-
-	public UIButton(Runnable callback, Image image) {
-		this.callback = callback;
-		this.image = image;
-		setupVAOandVBO();
-	}
-
 	@Override
 	public void Start() {
-		if (image != null) {
-			image.position.xy(position);
-			image.size.get(size);
-			return;
-		}
-		image = thing.getPart(Image.class);
-		if (image != null) {
-			image.position.xy(position);
-			image.size.get(size);
-		}
-		if (image == null) {
-			mesh.entry.EBO = -3;
-		}
 	}
 
 	@Override
 	public void Update() {
 		if (enabled) {
-			DoubleBuffer mouseX = BufferUtils.createDoubleBuffer(1);
-			DoubleBuffer mouseY_tmp = BufferUtils.createDoubleBuffer(1);
-			GLFW.glfwGetCursorPos(WindowSystem.Singleton.ID, mouseX, mouseY_tmp);
-			double mouseY = WindowSystem.Singleton.height - mouseY_tmp.get(0);
-			if (image != null) {
-				image.position.xy(position);
-				image.size.get(size);
-				if (image.thing == null) {
-					image.Update();
-				}
-			}
-
-			boolean insideBound = mouseX.get(0) >= position.x && mouseX.get(0) <= position.x + size.x
-					&& mouseY >= position.y && mouseY <= position.y + size.y;
-
-			if (insideBound) {
-				color.set(hoverColor);
-			} else {
-				color.set(baseColor);
-			}
 			if (!position.equals(oldPosition.x, oldPosition.y)
 					|| !color.equals(oldColor.x, oldColor.y, oldColor.z, oldColor.w)
 					|| !size.equals(oldSize.x, oldSize.y)) {
@@ -160,15 +108,6 @@ public class UIButton extends Part {
 				GL13.glActiveTexture(GL13.GL_TEXTURE0);
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 			}
-			if (insideBound && !clicked && GLFW.glfwGetMouseButton(InputManager.Singleton.window,
-					GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
-				callback.run();
-				clicked = true;
-			}
-			if (GLFW.glfwGetMouseButton(InputManager.Singleton.window,
-					GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_RELEASE) {
-				clicked = false;
-			}
 		}
 	}
 
@@ -187,7 +126,7 @@ public class UIButton extends Part {
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Float.BYTES * 9, Float.BYTES * 7);
 		GL20.glEnableVertexAttribArray(2);
 
-		mesh.entry = new PoolEntry(VAO, VBO, -1);
+		mesh.entry = new PoolEntry(VAO, VBO, -3);
 
 		GL30.glBindVertexArray(0);
 	}

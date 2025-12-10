@@ -9,16 +9,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import dreampool.IO.DeviceManager;
 import dreampool.audio.AudioDevice;
-import dreampool.core.Time;
-import dreampool.core.scene.SceneManager;
-import dreampool.example.scenes.ExampleSceneTitle;
-import dreampool.render.RenderPipeline;
 import dreampool.render.model.MeshPool;
-import dreampool.render.pass.GeometryPass;
-import dreampool.render.pass.PostPass;
-import dreampool.render.pass.UIPass;
 
 public class Application {
 	// TODO fix this whole god awful class
@@ -31,8 +23,9 @@ public class Application {
 	public static int FBOtex;
 
 	public static void main(String[] args) {
-		Window window = new Window();
-
+		Engine engine = new Engine();
+		engine.init();
+		engine.run();
 		GL.createCapabilities();
 
 		GL11.glViewport(0, 0, 800, 600);
@@ -43,10 +36,6 @@ public class Application {
 		AudioDevice sound = new AudioDevice();
 		// AssetLoader assetLoader = new AssetLoader();
 		MeshPool modelPool = new MeshPool();
-		RenderPipeline renderPipeline = new RenderPipeline();
-		renderPipeline.addPass(new GeometryPass());
-		renderPipeline.addPass(new UIPass());
-		renderPipeline.addPass(new PostPass());
 
 		FBO = GL30.glGenFramebuffers();
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, FBO);
@@ -70,44 +59,13 @@ public class Application {
 		}
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
-		new ExampleSceneTitle();
-		SceneManager manager = new SceneManager(ExampleSceneTitle.generateScene());
+		projection = new Matrix4f().perspective(70.0f, (window.width / resDivisor) / (window.height / resDivisor), 0.1f,
+				50.0f);
 
-		new DeviceManager(window.ID);
+		GL11.glViewport(0, 0, (int) (window.width / resDivisor), (int) (window.height / resDivisor));
 
-		Time time = new Time();
-
-		manager.currentScene.Start();
-
-		if (wireframe) {
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-		}
-
-		while (!window.shouldClose()) {
-			time.update();
-			renderPipeline.beginFrame();
-			window.update();
-
-			projection = new Matrix4f().perspective(70.0f, (window.width / resDivisor) / (window.height / resDivisor),
-					0.1f, 50.0f);
-
-			GL11.glViewport(0, 0, (int) (window.width / resDivisor), (int) (window.height / resDivisor));
-			manager.currentScene.Update();
-			renderPipeline.execute();
-
-			renderPipeline.endFrame();
-		}
-
-		sound.destroy();
-		// assetLoader.shutdown();
-
-		modelPool.destroy();
-		renderPipeline.destroy();
 		GL30.glDeleteFramebuffers(FBO);
 		GL30.glDeleteRenderbuffers(RBO);
-
-		window.destroy();
-		return;
 	}
 
 	static GLFWFramebufferSizeCallback myBufferCallback() {

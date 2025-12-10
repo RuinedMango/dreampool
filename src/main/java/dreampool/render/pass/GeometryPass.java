@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL40;
 
 import dreampool.Application;
-import dreampool.Window;
+import dreampool.WindowSystem;
 import dreampool.core.Time;
 import dreampool.render.RenderCommand;
 import dreampool.render.RenderStage;
@@ -45,8 +45,8 @@ public class GeometryPass implements RenderPass {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		mainShader.use();
 		mainShader.setMat4("projection", Application.projection);
-		mainShader.setVec2("targetResolution", (int) (Window.Singleton.width / Application.resDivisor) / 2,
-				(int) (Window.Singleton.height / Application.resDivisor) / 2);
+		mainShader.setVec2("targetResolution", (int) (WindowSystem.Singleton.width / Application.resDivisor) / 2,
+				(int) (WindowSystem.Singleton.height / Application.resDivisor) / 2);
 
 		lightDir.add(new Vector2f(75 * Time.deltaTime, 0));
 

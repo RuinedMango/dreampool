@@ -4,13 +4,18 @@ in vec2 TexCoord;
 
 uniform sampler2D uTexture;
 uniform bool uGrayscale;
+uniform bool uFlat;
 
 out vec4 FragColor;
 
 void main()
 {
     vec4 texSample = texture(uTexture, TexCoord);
-
+	
+	if (uFlat){
+		FragColor = Color;
+		return;
+	}
     if (uGrayscale) {
         // STB font atlas: red channel = alpha
         float alpha = texSample.r;
